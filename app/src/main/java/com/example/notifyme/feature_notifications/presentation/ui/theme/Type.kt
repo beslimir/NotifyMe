@@ -1,4 +1,4 @@
-package com.example.notifyme.ui.theme
+package com.example.notifyme.feature_notifications.presentation.ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle

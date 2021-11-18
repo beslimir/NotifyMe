@@ -1,14 +1,9 @@
-package com.example.notifyme
+package com.example.notifyme.feature_notifications.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.notifyme.ui.theme.NotifyMeTheme
+import com.example.notifyme.feature_notifications.presentation.ui.theme.NotifyMeTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
