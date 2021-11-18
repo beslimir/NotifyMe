@@ -69,6 +69,7 @@ dependencies {
     def coroutines_v = "1.5.2"
     def room_v = "2.3.0"
     def hilt_v = "2.38.1"
+    def gson_v = "2.9.0"
 
     // Jetpack Compose
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_v"
@@ -91,4 +92,8 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:$hilt_v"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     kapt "androidx.hilt:hilt-compiler:1.0.0"
+
+    //Gson
+    implementation "com.squareup.retrofit2:converter-gson:$gson_v"
+
 }
