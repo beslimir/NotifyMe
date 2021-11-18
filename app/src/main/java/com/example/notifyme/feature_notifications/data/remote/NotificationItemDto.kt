@@ -13,7 +13,8 @@ data class NotificationItemDto(
             id = id,
             title = title,
             content = content,
-            details = details.map { it.toNotificationDetails() }
+            details = details.map { it.toNotificationDetails() },
+            isShown = false
         )
     }
 }

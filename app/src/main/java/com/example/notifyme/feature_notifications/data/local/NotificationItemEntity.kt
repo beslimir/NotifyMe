@@ -10,8 +10,8 @@ data class NotificationItemEntity(
     @PrimaryKey val id: Int,
     val title: String,
     val content: String,
-    val details: List<NotificationDetails>
-
+    val details: List<NotificationDetails>,
+    val isShown: Boolean
 ) {
     fun toNotificationItem(): NotificationItem {
         return NotificationItem(
