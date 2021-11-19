@@ -9,7 +9,7 @@ interface NotificationDao {
     @Query("SELECT * FROM NotificationItemEntity")
     suspend fun getAllNotifications(): List<NotificationItemEntity>
 
-    @Query("SELECT * FROM NotificationItemEntity WHERE isShown = '0'")
+    @Query("SELECT * FROM NotificationItemEntity WHERE isShown = '1'")
     suspend fun getAllShownNotifications(): List<NotificationItemEntity>
 
     @Query("SELECT * FROM NotificationItemEntity WHERE id = :id")
