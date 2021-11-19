@@ -9,15 +9,24 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.forEach
 import kotlinx.coroutines.flow.map
 
+/**
+ * getAllNotifications() is a Flow (non-suspend) - map twice; return
+ * getAllShownNotifications is a List (suspend) - map once; flow - emit
+ *
+ * **/
+
 class NotificationRepositoryImpl(
     private val notificationDao: NotificationDao
 ): NotificationRepository {
 
-    override fun getAllNotifications(): Flow<List<NotificationItem>> = flow {
-        val notifications = notificationDao.getAllNotifications().map {
-            it.toNotificationItem()
+    override fun getAllNotifications(): Flow<List<NotificationItem>> {
+        val notifications = notificationDao.getAllNotifications().map { list ->
+            list.map { entity ->
+                entity.toNotificationItem()
+            }
         }
-        emit(notifications)
+
+        return notifications
     }
 
     override fun getAllShownNotifications(): Flow<List<NotificationItem>> = flow {
