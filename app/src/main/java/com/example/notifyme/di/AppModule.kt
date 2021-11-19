@@ -2,10 +2,13 @@ package com.example.notifyme.di
 
 import android.app.Application
 import androidx.room.Room
+import com.example.notifyme.feature_notifications.data.local.Converters
 import com.example.notifyme.feature_notifications.data.local.NotificationDatabase
 import com.example.notifyme.feature_notifications.data.repository.NotificationRepositoryImpl
+import com.example.notifyme.feature_notifications.data.util.GsonParser
 import com.example.notifyme.feature_notifications.domain.repository.NotificationRepository
 import com.example.notifyme.feature_notifications.domain.use_cases.*
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,7 +25,8 @@ object AppModule {
         app,
         NotificationDatabase::class.java,
         "notification_database"
-    ).build()
+    ).addTypeConverter(Converters(GsonParser(Gson())))
+        .build()
 
     @Singleton
     @Provides

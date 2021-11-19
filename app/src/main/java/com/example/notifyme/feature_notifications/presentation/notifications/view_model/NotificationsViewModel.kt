@@ -4,6 +4,8 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.notifyme.feature_notifications.domain.model.NotificationDetails
+import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 import com.example.notifyme.feature_notifications.domain.use_cases.UseCasesWrapper
 import com.example.notifyme.feature_notifications.domain.util.OrderType
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationEvent
@@ -12,6 +14,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +28,7 @@ class NotificationsViewModel @Inject constructor(
     private var getNotificationsJob: Job? = null
 
     init {
+//        insertTemporaryNotifications()
         getAllNotifications(OrderType.Ascending)
     }
 
@@ -42,6 +46,24 @@ class NotificationsViewModel @Inject constructor(
                     isOrderSectionVisible = !state.value.isOrderSectionVisible
                 )
             }
+        }
+    }
+
+    private fun insertTemporaryNotifications() {
+        val notifDetails: List<NotificationDetails> = listOf(NotificationDetails(
+            "beslimir",
+            "a special person",
+            "none",
+            "motivational"
+        ))
+        val notifItem = NotificationItem(
+            "This is the content",
+            notifDetails,
+            2,
+            "Title"
+        )
+        viewModelScope.launch {
+            useCases.insertNotificationUseCase(notifItem)
         }
     }
 
