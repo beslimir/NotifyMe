@@ -7,10 +7,10 @@ import kotlinx.coroutines.flow.Flow
 interface NotificationDao {
 
     @Query("SELECT * FROM NotificationItemEntity")
-    fun getAllNotifications(): Flow<List<NotificationItemEntity>>
+    suspend fun getAllNotifications(): List<NotificationItemEntity>
 
-    @Query("SELECT * FROM NotificationItemEntity WHERE isShown = 'true'")
-    fun getAllShownNotifications(): Flow<List<NotificationItemEntity>>
+    @Query("SELECT * FROM NotificationItemEntity WHERE isShown = '0'")
+    suspend fun getAllShownNotifications(): List<NotificationItemEntity>
 
     @Query("SELECT * FROM NotificationItemEntity WHERE id = :id")
     suspend fun getNotificationById(id: Int): NotificationItemEntity

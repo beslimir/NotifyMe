@@ -36,7 +36,8 @@ class NotificationsViewModel @Inject constructor(
         when (event) {
             is NotificationEvent.Order -> {
                 if (state.value.orderType::class == event.orderType::class &&
-                        state.value.orderType == event.orderType) {
+                    state.value.orderType == event.orderType
+                ) {
                     return
                 }
                 getAllNotifications(event.orderType)
@@ -50,12 +51,14 @@ class NotificationsViewModel @Inject constructor(
     }
 
     private fun insertTemporaryNotifications() {
-        val notifDetails: List<NotificationDetails> = listOf(NotificationDetails(
-            "beslimir",
-            "a special person",
-            "none",
-            "motivational"
-        ))
+        val notifDetails: List<NotificationDetails> = listOf(
+            NotificationDetails(
+                "beslimir",
+                "a special person",
+                "none",
+                "motivational"
+            )
+        )
         val notifItem = NotificationItem(
             "This is the content",
             notifDetails,

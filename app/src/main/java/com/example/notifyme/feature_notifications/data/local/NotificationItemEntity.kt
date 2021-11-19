@@ -18,7 +18,8 @@ data class NotificationItemEntity(
             id = id,
             title = title,
             content = content,
-            details = details
+            details = details,
+            isShown = isShown
         )
     }
 }
