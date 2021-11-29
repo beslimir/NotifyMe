@@ -1,6 +1,8 @@
 package com.example.notifyme.di
 
+import android.app.AlarmManager
 import android.app.Application
+import android.content.Context.ALARM_SERVICE
 import androidx.room.Room
 import com.example.notifyme.feature_notifications.data.local.Converters
 import com.example.notifyme.feature_notifications.data.local.NotificationDatabase
@@ -42,5 +44,8 @@ object AppModule {
         deleteNotificationUseCase = DeleteNotificationUseCase(repository)
     )
 
+    @Singleton
+    @Provides
+    fun provideAlarmManager(app: Application) = app.getSystemService(ALARM_SERVICE) as AlarmManager
 
 }

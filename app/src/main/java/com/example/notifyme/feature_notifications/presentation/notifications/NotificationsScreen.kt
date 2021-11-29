@@ -83,8 +83,8 @@ fun NotificationsScreen(
                     IconButton(
                         onClick = {
 //                            viewModel.onEvent(NotificationEvent.OpenSettings)
-                            showTimePicker(context = context)
-                            //TODO: Fix Time Picker
+//                            showTimePicker(context = context)
+                            //TODO: Implement Time Picker later...
                         }
                     ) {
                         Icon(

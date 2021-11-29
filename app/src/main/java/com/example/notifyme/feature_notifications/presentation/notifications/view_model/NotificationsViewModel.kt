@@ -1,7 +1,11 @@
 package com.example.notifyme.feature_notifications.presentation.notifications.view_model
 
-import android.app.*
+import android.app.AlarmManager
+import android.app.Application
+import android.app.Notification
+import android.app.PendingIntent
 import android.content.Intent
+import android.os.Build
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -11,14 +15,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notifyme.BaseApplication
 import com.example.notifyme.R
-import com.example.notifyme.feature_notifications.domain.model.NotificationDetails
+import com.example.notifyme.feature_notifications.broadcasts.TimerBroadcast
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 import com.example.notifyme.feature_notifications.domain.use_cases.UseCasesWrapper
 import com.example.notifyme.feature_notifications.domain.util.OrderType
 import com.example.notifyme.feature_notifications.presentation.TemporaryActivity
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationEvent
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationState
-import com.example.notifyme.feature_notifications.presentation.notifications.SelectedTime
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -37,7 +40,7 @@ class NotificationsViewModel @Inject constructor(
     private val useCases: UseCasesWrapper,
     application: Application,
     private val alarmManager: AlarmManager
-) : AndroidViewModel(application), SelectedTime {
+) : AndroidViewModel(application)/*, SelectedTime*/ {
 
     private val _state = mutableStateOf(NotificationState())
     val state: State<NotificationState> = _state
@@ -45,9 +48,6 @@ class NotificationsViewModel @Inject constructor(
     private var getNotificationsJob: Job? = null
 
     init {
-//        insertTemporaryNotifications()
-
-
         //get all data from local json file
         val myJson = getJsonFromLocalFile(application.assets.open("notify_me_msg.json"))
 
@@ -84,31 +84,11 @@ class NotificationsViewModel @Inject constructor(
                 )
             }
             is NotificationEvent.SendNotification -> {
-                sendNotificationOfFirstItem() //temporary function, for notification testing purpose
+                sendNotificationOfNextItem() //temporary function, for notification testing purpose
             }
             is NotificationEvent.OpenSettings -> {
-
+                Toast.makeText(getApplication(), "Settings implementation in process...", Toast.LENGTH_SHORT).show()
             }
-        }
-    }
-
-    private fun insertTemporaryNotifications() {
-        val notifDetails: List<NotificationDetails> = listOf(
-            NotificationDetails(
-                "beslimir",
-                "a special person",
-                "none",
-                "motivational"
-            )
-        )
-        val notifItem = NotificationItem(
-            "This is the content",
-            notifDetails,
-            2,
-            "Title"
-        )
-        viewModelScope.launch {
-            useCases.insertNotificationUseCase(notifItem)
         }
     }
 
@@ -150,14 +130,49 @@ class NotificationsViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-    override fun onSelectedTime(string: String) {
-        val hourOfDay = string.substringBefore(":").toInt()
-        val minute = string.substringAfter(":").toInt()
+//    override fun onSelectedTime(string: String) {
+//        val hourOfDay = string.substringBefore(":").toInt()
+//        val minute = string.substringAfter(":").toInt()
+//
+//        Toast.makeText(getApplication(), "$hourOfDay:$minute", Toast.LENGTH_SHORT).show()
+//    }
 
-        Toast.makeText(getApplication(), "$hourOfDay:$minute", Toast.LENGTH_SHORT).show()
+    private fun sendNotificationOfNextItem() {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 14)
+        calendar.set(Calendar.MINUTE, 32)
+        calendar.set(Calendar.SECOND, 0)
+
+        //if it's already too late, wait for tomorrow :)
+        if (Calendar.getInstance().after(calendar)) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
+        val intent = Intent(getApplication(), TimerBroadcast::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(
+            getApplication(),
+            0,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+
+        alarmManager.setRepeating(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            AlarmManager.INTERVAL_DAY,
+            pendingIntent
+        )
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            alarmManager.setExactAndAllowWhileIdle(
+                AlarmManager.RTC_WAKEUP,
+                calendar.timeInMillis,
+                pendingIntent
+            )
+        }
     }
 
-    private fun sendNotificationOfFirstItem() {
+    private fun sendNotificationNow() {
         val myIntent = Intent(getApplication(), TemporaryActivity::class.java)
         myIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 

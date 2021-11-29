@@ -11,8 +11,6 @@ import com.example.notifyme.BaseApplication.Companion.MY_CHANNEL
 import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.presentation.TemporaryActivity
 
-//Will be used later...
-
 class TimerBroadcast: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
