@@ -1,34 +1,43 @@
 package com.example.notifyme.feature_notifications.presentation.notifications.view_model
 
+import android.app.*
+import android.content.Intent
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.notifyme.BaseApplication
+import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.domain.model.NotificationDetails
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 import com.example.notifyme.feature_notifications.domain.use_cases.UseCasesWrapper
 import com.example.notifyme.feature_notifications.domain.util.OrderType
+import com.example.notifyme.feature_notifications.presentation.TemporaryActivity
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationEvent
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationState
+import com.example.notifyme.feature_notifications.presentation.notifications.SelectedTime
+import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.io.InputStream
-import javax.inject.Inject
-import android.app.Application
-import com.google.gson.Gson
-import org.json.JSONObject
-
 import org.json.JSONArray
+import org.json.JSONObject
+import java.io.InputStream
+import java.util.*
+import javax.inject.Inject
 
 
 @HiltViewModel
 class NotificationsViewModel @Inject constructor(
     private val useCases: UseCasesWrapper,
-    application: Application
-) : AndroidViewModel(application) {
+    application: Application,
+    private val alarmManager: AlarmManager
+) : AndroidViewModel(application), SelectedTime {
 
     private val _state = mutableStateOf(NotificationState())
     val state: State<NotificationState> = _state
@@ -73,6 +82,12 @@ class NotificationsViewModel @Inject constructor(
                 _state.value = state.value.copy(
                     isOrderSectionVisible = !state.value.isOrderSectionVisible
                 )
+            }
+            is NotificationEvent.SendNotification -> {
+                sendNotificationOfFirstItem() //temporary function, for notification testing purpose
+            }
+            is NotificationEvent.OpenSettings -> {
+
             }
         }
     }
@@ -133,6 +148,35 @@ class NotificationsViewModel @Inject constructor(
                     orderType = orderType
                 )
             }.launchIn(viewModelScope)
+    }
+
+    override fun onSelectedTime(string: String) {
+        val hourOfDay = string.substringBefore(":").toInt()
+        val minute = string.substringAfter(":").toInt()
+
+        Toast.makeText(getApplication(), "$hourOfDay:$minute", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun sendNotificationOfFirstItem() {
+        val myIntent = Intent(getApplication(), TemporaryActivity::class.java)
+        myIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+
+        val pendingIntent = PendingIntent.getActivity(
+            getApplication(),
+            0,
+            myIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT
+        )
+        val builder = NotificationCompat.Builder(getApplication(), BaseApplication.MY_CHANNEL)
+            .setContentIntent(pendingIntent)
+            .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
+            .setContentTitle("Content title")
+            .setContentText("Content Text")
+            .setPriority(Notification.DEFAULT_SOUND)
+            .setAutoCancel(true)
+
+        val notificationManager = NotificationManagerCompat.from(getApplication())
+        notificationManager.notify(100, builder.build())
     }
 
 }

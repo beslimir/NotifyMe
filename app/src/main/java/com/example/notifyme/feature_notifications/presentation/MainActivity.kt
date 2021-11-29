@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
                         startDestination = Screen.NotificationsScreen.route
                     ) {
                         composable(route = Screen.NotificationsScreen.route) {
-                            NotificationsScreen(navController = navController)
+                            NotificationsScreen(navController = navController, this@MainActivity)
                         }
                     }
                 }
