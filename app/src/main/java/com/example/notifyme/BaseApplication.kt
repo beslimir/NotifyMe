@@ -4,6 +4,7 @@ import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
+import com.facebook.stetho.Stetho
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -15,6 +16,8 @@ class BaseApplication: Application() {
 
     override fun onCreate() {
         super.onCreate()
+
+        Stetho.initializeWithDefaults(this);
 
         createNotificationChannel()
     }

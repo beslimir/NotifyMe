@@ -6,7 +6,6 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -17,7 +16,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.notifyme.BaseApplication
 import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.broadcasts.TimerBroadcast
-import com.example.notifyme.feature_notifications.data.local.UserPreferences
+import com.example.notifyme.feature_notifications.data.local.PrefsManager
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 import com.example.notifyme.feature_notifications.domain.use_cases.UseCasesWrapper
 import com.example.notifyme.feature_notifications.domain.util.OrderType
@@ -27,7 +26,6 @@ import com.example.notifyme.feature_notifications.presentation.notifications.Not
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -50,11 +48,11 @@ class NotificationsViewModel @Inject constructor(
 
     private var getNotificationsJob: Job? = null
 
-    var userPreferences: UserPreferences
+    var prefsManager: PrefsManager
     private var nextItemId: Int = 0
 
     init {
-        userPreferences = UserPreferences(getApplication())
+        prefsManager = PrefsManager(getApplication())
 
         //get all data from local json file
         val myJson = getJsonFromLocalFile(application.assets.open("notify_me_msg.json"))
@@ -148,13 +146,13 @@ class NotificationsViewModel @Inject constructor(
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
-        var title: String = ""
-        var id: Int = 0
-        var notificationItem: NotificationItem
+        var title: String = "aaaa"
+        var id: Int = 1
+//        var notificationItem: NotificationItem
         viewModelScope.launch {
-            notificationItem = useCases.getNotificationByIdUseCase(5)
-            title = notificationItem.title
-            id = notificationItem.id
+//            notificationItem = useCases.getNotificationByIdUseCase(5)
+//            title = notificationItem.title
+//            id = notificationItem.id
 
             val intent = Intent(getApplication(), TimerBroadcast::class.java).apply {
                 putExtra("nextItemId", id)

@@ -71,6 +71,8 @@ dependencies {
     def hilt_v = "2.38.1"
     def gson_v = "2.9.0"
     def dataStore_v = "1.0.0"
+    def lifeCycle_v = "2.4.0"
+    def stetho_v = "1.5.1"
 
     // Jetpack Compose
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$compose_v"
@@ -99,5 +101,11 @@ dependencies {
 
     // Preferences DataStore
     implementation "androidx.datastore:datastore-preferences:$dataStore_v"
+
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifeCycle_v"
+
+    //Stetho
+    implementation "com.facebook.stetho:stetho:$stetho_v"
 
 }

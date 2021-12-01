@@ -6,6 +6,7 @@ import android.content.Context.ALARM_SERVICE
 import androidx.room.Room
 import com.example.notifyme.feature_notifications.data.local.Converters
 import com.example.notifyme.feature_notifications.data.local.NotificationDatabase
+import com.example.notifyme.feature_notifications.data.local.PrefsManager
 import com.example.notifyme.feature_notifications.data.repository.NotificationRepositoryImpl
 import com.example.notifyme.feature_notifications.data.util.GsonParser
 import com.example.notifyme.feature_notifications.domain.repository.NotificationRepository
@@ -47,5 +48,9 @@ object AppModule {
     @Singleton
     @Provides
     fun provideAlarmManager(app: Application) = app.getSystemService(ALARM_SERVICE) as AlarmManager
+
+    @Singleton
+    @Provides
+    fun providePrefsManager(app: Application) = PrefsManager(app.applicationContext)
 
 }
