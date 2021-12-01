@@ -25,10 +25,12 @@ import com.example.notifyme.feature_notifications.presentation.notifications.Not
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationState
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.InputStream
@@ -53,16 +55,25 @@ class NotificationsViewModel @Inject constructor(
 
     init {
 
-        //get all data from local json file
-        val myJson = getJsonFromLocalFile(application.assets.open("notify_me_msg.json"))
+        viewModelScope.launch {
+            //get all data from local json file
+            val myJson = getJsonFromLocalFile(application.assets.open("notify_me_msg.json"))
 
-        //save retrieved data to Room db
-        saveRetrievedDataToRoomDb(myJson)
+            withContext(Dispatchers.IO) {
+                //save retrieved data to Room db
+                saveRetrievedDataToRoomDb(myJson)
 
-        //show all notifications from Room database in app list
-        getAllNotifications(OrderType.Ascending)
+                withContext(Dispatchers.Main) {
+                    //show all notifications from Room database in app list
+                    getAllNotifications(OrderType.Ascending)
+                }
+            }
 
-        sendNotificationOfNextItem()
+            withContext(Dispatchers.Default) {
+                sendNotificationOfNextItem()
+            }
+
+        }
     }
 
     fun onEvent(event: NotificationEvent) {
@@ -103,11 +114,11 @@ class NotificationsViewModel @Inject constructor(
         return json
     }
 
-    private fun saveRetrievedDataToRoomDb(myJson: String) {
+    private suspend fun saveRetrievedDataToRoomDb(myJson: String) {
         val reader = JSONObject(myJson)
         val finalJson: JSONArray = reader.getJSONArray("final_json")
 
-        viewModelScope.launch {
+
             for (i in 0 until finalJson.length()) {
                 useCases.insertNotificationUseCase(
                     Gson().fromJson(
@@ -116,7 +127,7 @@ class NotificationsViewModel @Inject constructor(
                     )
                 )
             }
-        }
+
 
     }
 
@@ -136,8 +147,8 @@ class NotificationsViewModel @Inject constructor(
 
     private fun sendNotificationOfNextItem() {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 19)
-        calendar.set(Calendar.MINUTE, 32)
+        calendar.set(Calendar.HOUR_OF_DAY, 1)
+        calendar.set(Calendar.MINUTE, 46)
         calendar.set(Calendar.SECOND, 0)
 
         //if it's already too late, wait for tomorrow :)
@@ -147,11 +158,11 @@ class NotificationsViewModel @Inject constructor(
 
         var title: String = "aaaa"
         var id: Int = 1
-//        var notificationItem: NotificationItem
+        var notificationItem: NotificationItem
         viewModelScope.launch {
-//            notificationItem = useCases.getNotificationByIdUseCase(5)
-//            title = notificationItem.title
-//            id = notificationItem.id
+            notificationItem = useCases.getNotificationByIdUseCase(5)
+            title = notificationItem.title
+            id = notificationItem.id
 
             val intent = Intent(getApplication(), TimerBroadcast::class.java).apply {
                 putExtra("nextItemId", id)
