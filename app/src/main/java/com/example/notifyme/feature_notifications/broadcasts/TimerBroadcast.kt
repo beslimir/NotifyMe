@@ -14,6 +14,8 @@ import com.example.notifyme.feature_notifications.presentation.TemporaryActivity
 class TimerBroadcast: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
+        val msg: Int? = intent?.getIntExtra("nextItemId", 1)
+
         val myIntent = Intent(context, TemporaryActivity::class.java)
         myIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
@@ -21,7 +23,7 @@ class TimerBroadcast: BroadcastReceiver() {
         val builder = NotificationCompat.Builder(context!!, MY_CHANNEL)
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
-            .setContentTitle("Content title")
+            .setContentTitle("Content title id: $msg")
             .setContentText("Content Text")
             .setPriority(Notification.DEFAULT_SOUND)
             .setAutoCancel(true)

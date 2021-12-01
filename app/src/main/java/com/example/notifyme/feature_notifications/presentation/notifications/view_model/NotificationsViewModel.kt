@@ -6,6 +6,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +17,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.notifyme.BaseApplication
 import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.broadcasts.TimerBroadcast
+import com.example.notifyme.feature_notifications.data.local.UserPreferences
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 import com.example.notifyme.feature_notifications.domain.use_cases.UseCasesWrapper
 import com.example.notifyme.feature_notifications.domain.util.OrderType
@@ -25,6 +27,7 @@ import com.example.notifyme.feature_notifications.presentation.notifications.Not
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -47,25 +50,22 @@ class NotificationsViewModel @Inject constructor(
 
     private var getNotificationsJob: Job? = null
 
+    var userPreferences: UserPreferences
+    private var nextItemId: Int = 0
+
     init {
+        userPreferences = UserPreferences(getApplication())
+
         //get all data from local json file
         val myJson = getJsonFromLocalFile(application.assets.open("notify_me_msg.json"))
 
         //save retrieved data to Room db
         saveRetrievedDataToRoomDb(myJson)
 
-
-//        val reader = JSONObject(myJson)
-//        val finalJson: JSONArray = reader.getJSONArray("final_json")
-//
-//        val list = arrayListOf<NotificationItem>()
-//        for (i in 0 until finalJson.length()) {
-//            list.add(Gson().fromJson(finalJson[i].toString(), NotificationItem::class.java))
-//        }
-
-
         //show all notifications from Room database in app list
         getAllNotifications(OrderType.Ascending)
+
+        sendNotificationOfNextItem()
     }
 
     fun onEvent(event: NotificationEvent) {
@@ -84,10 +84,14 @@ class NotificationsViewModel @Inject constructor(
                 )
             }
             is NotificationEvent.SendNotification -> {
-                sendNotificationOfNextItem() //temporary function, for notification testing purpose
+                sendNotificationNow() //temporary function, for notification testing purpose
             }
             is NotificationEvent.OpenSettings -> {
-                Toast.makeText(getApplication(), "Settings implementation in process...", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    getApplication(),
+                    "Settings implementation in process...",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
@@ -130,17 +134,13 @@ class NotificationsViewModel @Inject constructor(
             }.launchIn(viewModelScope)
     }
 
-//    override fun onSelectedTime(string: String) {
-//        val hourOfDay = string.substringBefore(":").toInt()
-//        val minute = string.substringAfter(":").toInt()
-//
-//        Toast.makeText(getApplication(), "$hourOfDay:$minute", Toast.LENGTH_SHORT).show()
-//    }
+
+    /** Push Notification functions **/
 
     private fun sendNotificationOfNextItem() {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 14)
-        calendar.set(Calendar.MINUTE, 32)
+        calendar.set(Calendar.HOUR_OF_DAY, 19)
+        calendar.set(Calendar.MINUTE, 6)
         calendar.set(Calendar.SECOND, 0)
 
         //if it's already too late, wait for tomorrow :)
@@ -148,7 +148,9 @@ class NotificationsViewModel @Inject constructor(
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
-        val intent = Intent(getApplication(), TimerBroadcast::class.java)
+        val intent = Intent(getApplication(), TimerBroadcast::class.java).apply {
+            putExtra("nextItemId", 1)
+        }
         val pendingIntent = PendingIntent.getBroadcast(
             getApplication(),
             0,
