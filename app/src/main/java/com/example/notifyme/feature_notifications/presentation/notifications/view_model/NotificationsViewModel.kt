@@ -140,7 +140,7 @@ class NotificationsViewModel @Inject constructor(
     private fun sendNotificationOfNextItem() {
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, 19)
-        calendar.set(Calendar.MINUTE, 6)
+        calendar.set(Calendar.MINUTE, 32)
         calendar.set(Calendar.SECOND, 0)
 
         //if it's already too late, wait for tomorrow :)
@@ -148,29 +148,39 @@ class NotificationsViewModel @Inject constructor(
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
-        val intent = Intent(getApplication(), TimerBroadcast::class.java).apply {
-            putExtra("nextItemId", 1)
-        }
-        val pendingIntent = PendingIntent.getBroadcast(
-            getApplication(),
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        var title: String = ""
+        var id: Int = 0
+        var notificationItem: NotificationItem
+        viewModelScope.launch {
+            notificationItem = useCases.getNotificationByIdUseCase(5)
+            title = notificationItem.title
+            id = notificationItem.id
 
-        alarmManager.setRepeating(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
-            pendingIntent
-        )
+            val intent = Intent(getApplication(), TimerBroadcast::class.java).apply {
+                putExtra("nextItemId", id)
+                putExtra("nextItemTitle", title)
+            }
+            val pendingIntent = PendingIntent.getBroadcast(
+                getApplication(),
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            alarmManager.setExactAndAllowWhileIdle(
+            alarmManager.setRepeating(
                 AlarmManager.RTC_WAKEUP,
                 calendar.timeInMillis,
+                AlarmManager.INTERVAL_DAY,
                 pendingIntent
             )
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
+            }
         }
     }
 
