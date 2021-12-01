@@ -40,7 +40,8 @@ import javax.inject.Inject
 class NotificationsViewModel @Inject constructor(
     private val useCases: UseCasesWrapper,
     application: Application,
-    private val alarmManager: AlarmManager
+    private val alarmManager: AlarmManager,
+    private val prefsManager: PrefsManager
 ) : AndroidViewModel(application)/*, SelectedTime*/ {
 
     private val _state = mutableStateOf(NotificationState())
@@ -48,11 +49,9 @@ class NotificationsViewModel @Inject constructor(
 
     private var getNotificationsJob: Job? = null
 
-    var prefsManager: PrefsManager
     private var nextItemId: Int = 0
 
     init {
-        prefsManager = PrefsManager(getApplication())
 
         //get all data from local json file
         val myJson = getJsonFromLocalFile(application.assets.open("notify_me_msg.json"))
