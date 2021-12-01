@@ -6,6 +6,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +53,7 @@ class NotificationsViewModel @Inject constructor(
     private var getNotificationsJob: Job? = null
 
     private var nextItemId: Int = 0
+    private var isOpened: Int = 0
 
     init {
 
@@ -73,7 +75,23 @@ class NotificationsViewModel @Inject constructor(
                 sendNotificationOfNextItem()
             }
 
+            withContext(Dispatchers.IO) {
+                testGetDataStore()
+                testSaveDataStore()
+                testGetDataStore()
+            }
+
         }
+    }
+
+    private suspend fun testSaveDataStore() {
+        prefsManager.setOpenedFlag()
+    }
+
+    private fun testGetDataStore() {
+        prefsManager.getOpenedFlag.onEach { number ->
+            Log.d("aaaa", "testDataStore: $number")
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: NotificationEvent) {
