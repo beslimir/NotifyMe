@@ -6,7 +6,6 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -31,7 +30,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.InputStream
@@ -52,46 +50,28 @@ class NotificationsViewModel @Inject constructor(
 
     private var getNotificationsJob: Job? = null
 
-    private var nextItemId: Int = 0
-    private var isOpened: Int = 0
-
     init {
+        checkStatus()
+    }
 
-        viewModelScope.launch {
+    private fun checkStatus() {
+        //if nextItemId == 0, that means the app is never opened before
+        if (prefsManager.getNextItemId == 0) {
             //get all data from local json file
-            val myJson = getJsonFromLocalFile(application.assets.open("notify_me_msg.json"))
+            val myJson = getJsonFromLocalFile(getApplication<Application>().assets.open("notify_me_msg.json"))
 
-            withContext(Dispatchers.IO) {
+            viewModelScope.launch(Dispatchers.IO) {
                 //save retrieved data to Room db
                 saveRetrievedDataToRoomDb(myJson)
-
-                withContext(Dispatchers.Main) {
-                    //show all notifications from Room database in app list
-                    getAllNotifications(OrderType.Ascending)
-                }
+                //increment nextItemId so it's > 0
+                prefsManager.incrementNextItemId()
             }
 
-            withContext(Dispatchers.Default) {
-                sendNotificationOfNextItem()
-            }
-
-            withContext(Dispatchers.IO) {
-                testGetDataStore()
-                testSaveDataStore()
-                testGetDataStore()
-            }
-
+            //show all notifications from Room database in app list
+            getAllNotifications(OrderType.Ascending)
+            //set notification for next item ready
+            sendNotificationOfNextItem()
         }
-    }
-
-    private suspend fun testSaveDataStore() {
-        prefsManager.setOpenedFlag()
-    }
-
-    private fun testGetDataStore() {
-        prefsManager.getOpenedFlag.onEach { number ->
-            Log.d("aaaa", "testDataStore: $number")
-        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: NotificationEvent) {
@@ -136,17 +116,14 @@ class NotificationsViewModel @Inject constructor(
         val reader = JSONObject(myJson)
         val finalJson: JSONArray = reader.getJSONArray("final_json")
 
-
-            for (i in 0 until finalJson.length()) {
-                useCases.insertNotificationUseCase(
-                    Gson().fromJson(
-                        finalJson[i].toString(),
-                        NotificationItem::class.java
-                    )
+        for (i in 0 until finalJson.length()) {
+            useCases.insertNotificationUseCase(
+                Gson().fromJson(
+                    finalJson[i].toString(),
+                    NotificationItem::class.java
                 )
-            }
-
-
+            )
+        }
     }
 
     private fun getAllNotifications(orderType: OrderType) {

@@ -51,6 +51,6 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providePrefsManager(app: Application) = PrefsManager(app.applicationContext)
+    fun providePrefsManager(app: Application) = PrefsManager(app)
 
 }
