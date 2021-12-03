@@ -6,6 +6,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -47,6 +48,9 @@ class NotificationsViewModel @Inject constructor(
 
     private val _state = mutableStateOf(NotificationState())
     val state: State<NotificationState> = _state
+
+    private val NOTIFICATION_HOURS = 4
+    private val NOTIFICATION_MINUTES = 40
 
     private var getNotificationsJob: Job? = null
 
@@ -128,6 +132,9 @@ class NotificationsViewModel @Inject constructor(
                 )
             )
         }
+
+        //save last item id (list size)
+        prefsManager.saveLastItemId(finalJson.length())
     }
 
     private fun getAllNotifications(orderType: OrderType) {
@@ -146,8 +153,8 @@ class NotificationsViewModel @Inject constructor(
 
     private fun sendNotificationOfNextItem() {
         val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, 1)
-        calendar.set(Calendar.MINUTE, 46)
+        calendar.set(Calendar.HOUR_OF_DAY, NOTIFICATION_HOURS)
+        calendar.set(Calendar.MINUTE, NOTIFICATION_MINUTES)
         calendar.set(Calendar.SECOND, 0)
 
         //if it's already too late, wait for tomorrow :)
@@ -155,13 +162,10 @@ class NotificationsViewModel @Inject constructor(
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
-        var title: String = "aaaa"
-        var id: Int = 1
-        var notificationItem: NotificationItem
         viewModelScope.launch {
-            notificationItem = useCases.getNotificationByIdUseCase(5)
-            title = notificationItem.title
-            id = notificationItem.id
+            val id: Int = prefsManager.getNextItemId()
+            val notificationItem: NotificationItem = useCases.getNotificationByIdUseCase(id)
+            val title: String = notificationItem.title
 
             val intent = Intent(getApplication(), TimerBroadcast::class.java).apply {
                 putExtra("nextItemId", id)

@@ -17,7 +17,6 @@ class PrefsManager(
     companion object {
         val NEXT_ID = intPreferencesKey("next_id")
         val LAST_ID = intPreferencesKey("last_id")
-        val FLAG_OPENED = intPreferencesKey("opened_flag")
     }
 
     suspend fun incrementNextItemId() {
@@ -41,34 +40,17 @@ class PrefsManager(
         return context.dataStore.data.first()[LAST_ID] ?: 0
     }
 
-    suspend fun setOpenedFlag() {
-        context.dataStore.edit { preferences ->
-            preferences[FLAG_OPENED] = 1
-        }
-    }
-
-    suspend fun getFlagOpen(): Int {
-        return context.dataStore.data.first()[FLAG_OPENED] ?: 0
-    }
-
-    //not returning new value after exit of app (back button) and returning
-    val getNextItemId by lazy {
-        runBlocking {
-            getNextItemId()
-        }
-    }
-
-    //not returning new value after exit of app (back button) and returning
-    val getFlagOpen by lazy {
-        runBlocking {
-            context.dataStore.data.first()
-        }[FLAG_OPENED] ?: 0
-    }
-
-    //not returning new value after exit of app (back button) and returning
-    val getLastItemId by lazy {
-        runBlocking {
-            context.dataStore.data.first()
-        }[LAST_ID] ?: 0
-    }
+//    //not returning new value after exit of app (back button) and returning
+//    val getNextItemId by lazy {
+//        runBlocking {
+//            getNextItemId()
+//        }
+//    }
+//
+//    //not returning new value after exit of app (back button) and returning
+//    val getLastItemId by lazy {
+//        runBlocking {
+//            context.dataStore.data.first()
+//        }[LAST_ID] ?: 0
+//    }
 }

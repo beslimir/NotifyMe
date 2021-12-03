@@ -24,8 +24,8 @@ class TimerBroadcast: BroadcastReceiver() {
         val builder = NotificationCompat.Builder(context!!, MY_CHANNEL)
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
-            .setContentTitle("Content title id: $id")
-            .setContentText("Content Text: $title")
+            .setContentTitle("Content title id: $title")
+            .setContentText("Content Text: $id")
             .setPriority(Notification.DEFAULT_SOUND)
             .setAutoCancel(true)
 
