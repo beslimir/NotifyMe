@@ -5,7 +5,6 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.runBlocking
 import javax.inject.Singleton
 
@@ -23,14 +22,14 @@ class PrefsManager(
 
     suspend fun incrementNextItemId() {
         context.dataStore.edit { preferences ->
-            val id = getNextItemId + 1
+            val id = getNextItemId() + 1
             preferences[NEXT_ID] = id
         }
     }
 
-    val getNextItemId = runBlocking {
-        context.dataStore.data.first()
-    }[NEXT_ID] ?: 0
+    suspend fun getNextItemId(): Int {
+        return context.dataStore.data.first()[NEXT_ID] ?: 0
+    }
 
     suspend fun saveLastItemId(size: Int) {
         context.dataStore.edit { preferences ->
@@ -38,9 +37,9 @@ class PrefsManager(
         }
     }
 
-    val getLastItemId = runBlocking {
-        context.dataStore.data.first()
-    }[LAST_ID] ?: 0
+    suspend fun getLastItemId(): Int {
+        return context.dataStore.data.first()[LAST_ID] ?: 0
+    }
 
     suspend fun setOpenedFlag() {
         context.dataStore.edit { preferences ->
@@ -48,7 +47,28 @@ class PrefsManager(
         }
     }
 
-    val getFlagOpen = runBlocking {
-        context.dataStore.data.first()
-    }[FLAG_OPENED] ?: 0
+    suspend fun getFlagOpen(): Int {
+        return context.dataStore.data.first()[FLAG_OPENED] ?: 0
+    }
+
+    //not returning new value after exit of app (back button) and returning
+    val getNextItemId by lazy {
+        runBlocking {
+            getNextItemId()
+        }
+    }
+
+    //not returning new value after exit of app (back button) and returning
+    val getFlagOpen by lazy {
+        runBlocking {
+            context.dataStore.data.first()
+        }[FLAG_OPENED] ?: 0
+    }
+
+    //not returning new value after exit of app (back button) and returning
+    val getLastItemId by lazy {
+        runBlocking {
+            context.dataStore.data.first()
+        }[LAST_ID] ?: 0
+    }
 }

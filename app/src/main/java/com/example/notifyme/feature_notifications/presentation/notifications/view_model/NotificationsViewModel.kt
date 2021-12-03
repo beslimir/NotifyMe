@@ -30,12 +30,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.InputStream
 import java.util.*
 import javax.inject.Inject
-
 
 @HiltViewModel
 class NotificationsViewModel @Inject constructor(
@@ -55,22 +55,26 @@ class NotificationsViewModel @Inject constructor(
     }
 
     private fun checkStatus() {
-        //if nextItemId == 0, that means the app is never opened before
-        if (prefsManager.getNextItemId == 0) {
-            //get all data from local json file
-            val myJson = getJsonFromLocalFile(getApplication<Application>().assets.open("notify_me_msg.json"))
-
-            viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
+            //if nextItemId == 0, that means the app is never opened before
+            if (prefsManager.getNextItemId() == 0) {
+                //get all data from local json file
+                val myJson = getJsonFromLocalFile(getApplication<Application>().assets.open("notify_me_msg.json"))
                 //save retrieved data to Room db
                 saveRetrievedDataToRoomDb(myJson)
                 //increment nextItemId so it's > 0
                 prefsManager.incrementNextItemId()
             }
 
-            //show all notifications from Room database in app list
-            getAllNotifications(OrderType.Ascending)
-            //set notification for next item ready
-            sendNotificationOfNextItem()
+            withContext(Dispatchers.Main) {
+                //show all notifications from Room database in app list
+                getAllNotifications(OrderType.Ascending)
+            }
+
+            withContext(Dispatchers.Default) {
+                //set notification for next item ready
+                sendNotificationOfNextItem()
+            }
         }
     }
 
