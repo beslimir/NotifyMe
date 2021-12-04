@@ -24,6 +24,7 @@ import com.example.notifyme.feature_notifications.domain.util.OrderType
 import com.example.notifyme.feature_notifications.presentation.TemporaryActivity
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationEvent
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationState
+import com.example.notifyme.feature_notifications.util.DataTimeConverter
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +36,7 @@ import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.InputStream
+import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
 
@@ -51,6 +53,7 @@ class NotificationsViewModel @Inject constructor(
 
     private val NOTIFICATION_HOURS = 4
     private val NOTIFICATION_MINUTES = 40
+    private val ONE_DAY_IN_MILLIS = 86400000
 
     private var getNotificationsJob: Job? = null
 
@@ -123,13 +126,22 @@ class NotificationsViewModel @Inject constructor(
     private suspend fun saveRetrievedDataToRoomDb(myJson: String) {
         val reader = JSONObject(myJson)
         val finalJson: JSONArray = reader.getJSONArray("final_json")
+        lateinit var notificationItem: NotificationItem
+
+        val calendar = Calendar.getInstance(TimeZone.getDefault())
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy.", Locale.GERMAN)
+        val dateString = dateFormat.format(calendar.timeInMillis)
+        val todayMillis = DataTimeConverter.convertDateToMillis(dateString)
 
         for (i in 0 until finalJson.length()) {
+            notificationItem = Gson().fromJson(
+                finalJson[i].toString(),
+                NotificationItem::class.java
+            ).also {
+                it.date = todayMillis + ONE_DAY_IN_MILLIS * i
+            }
             useCases.insertNotificationUseCase(
-                Gson().fromJson(
-                    finalJson[i].toString(),
-                    NotificationItem::class.java
-                )
+                notificationItem
             )
         }
 

@@ -11,7 +11,7 @@ data class NotificationItemEntity(
     val title: String,
     val content: String,
     val details: List<NotificationDetails>,
-    val isShown: Boolean
+    var date: Long
 ) {
     fun toNotificationItem(): NotificationItem {
         return NotificationItem(
@@ -19,7 +19,7 @@ data class NotificationItemEntity(
             title = title,
             content = content,
             details = details,
-            isShown = isShown
+            date = date
         )
     }
 }

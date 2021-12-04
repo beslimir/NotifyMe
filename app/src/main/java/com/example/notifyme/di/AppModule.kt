@@ -39,8 +39,9 @@ object AppModule {
     @Provides
     fun provideUseCasesWrapper(repository: NotificationRepository): UseCasesWrapper = UseCasesWrapper(
         getAllNotificationsUseCase = GetAllNotificationsUseCase(repository),
-        getAllShownNotificationsUseCase = GetAllShownNotificationsUseCase(repository),
+        getAllNotificationsUntilDateUseCase = GetAllNotificationsUntilDateUseCase(repository),
         getNotificationByIdUseCase = GetNotificationByIdUseCase(repository),
+        getNotificationByDateUseCase = GetNotificationByDateUseCase(repository),
         insertNotificationUseCase = InsertNotificationUseCase(repository),
         deleteNotificationUseCase = DeleteNotificationUseCase(repository)
     )
