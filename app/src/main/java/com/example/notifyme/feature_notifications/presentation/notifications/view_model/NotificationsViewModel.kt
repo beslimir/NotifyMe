@@ -10,6 +10,7 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.toArgb
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.AndroidViewModel
@@ -17,6 +18,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.notifyme.BaseApplication
 import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.broadcasts.TimerBroadcast
+import com.example.notifyme.feature_notifications.data.local.NotificationItemEntity
 import com.example.notifyme.feature_notifications.data.local.PrefsManager
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 import com.example.notifyme.feature_notifications.domain.use_cases.UseCasesWrapper
@@ -139,6 +141,7 @@ class NotificationsViewModel @Inject constructor(
                 NotificationItem::class.java
             ).also {
                 it.date = todayMillis + ONE_DAY_IN_MILLIS * i
+                it.color = NotificationItemEntity.notificationItemColors.random().toArgb()
             }
             useCases.insertNotificationUseCase(
                 notificationItem

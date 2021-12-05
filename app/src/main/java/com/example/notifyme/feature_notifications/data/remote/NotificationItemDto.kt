@@ -8,13 +8,14 @@ data class NotificationItemDto(
     val id: Int,
     val title: String
 ) {
-    fun toNotificationItemEntity(date: Long): NotificationItemEntity {
+    fun toNotificationItemEntity(date: Long, color: Int): NotificationItemEntity {
         return NotificationItemEntity(
             id = id,
             title = title,
             content = content,
             details = details.map { it.toNotificationDetails() },
-            date = date
+            date = date,
+            color = color
         )
     }
 }

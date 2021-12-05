@@ -3,6 +3,7 @@ package com.example.notifyme.feature_notifications.presentation.notifications
 import android.app.TimePickerDialog
 import android.content.Context
 import androidx.compose.animation.*
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -111,12 +112,19 @@ fun NotificationsScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(state.notifications) { notification ->
+                items(state.notifications) { notificationItem ->
                     NotificationListItem(
-                        notificationItem = notification,
-                        onItemClick = {
-                            navController.navigate(Screen.NotificationDetailsScreen.route + "/${notification.id}")
-                        }
+                        notificationItem = notificationItem,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navController.navigate(Screen.NotificationDetailsScreen.route +
+                                        "?notificationId=${notificationItem.id}&notificationColor=${notificationItem.color}")
+                            }
+//                        onItemClick = {
+//                            navController.navigate(Screen.NotificationDetailsScreen.route +
+//                                    "?notificationId=${notificationItem.id}&notificationColor=${notificationItem.color}")
+//                        }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }

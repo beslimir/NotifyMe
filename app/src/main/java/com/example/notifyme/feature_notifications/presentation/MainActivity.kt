@@ -6,11 +6,15 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.notifyme.feature_notifications.presentation.ui.theme.NotifyMeAppTheme
+import com.example.notifyme.feature_notifications.presentation.notification_details.NotificationDetailsScreen
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationsScreen
-import com.example.notifyme.feature_notifications.presentation.ui.theme.NotifyMeTheme
+
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -19,7 +23,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            NotifyMeTheme {
+            NotifyMeAppTheme {
                 Surface(color = MaterialTheme.colors.background) {
                     val navController = rememberNavController()
                     NavHost(
@@ -28,6 +32,25 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable(route = Screen.NotificationsScreen.route) {
                             NotificationsScreen(navController = navController, this@MainActivity)
+                        }
+                        composable(route = Screen.NotificationDetailsScreen.route +
+                                "?notificationId={notificationId}&notificationColor={notificationColor}",
+                            arguments = listOf(
+                                navArgument(name = "notificationId") {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                },
+                                navArgument(name = "notificationColor") {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            )
+                        ) {
+                            val color = it.arguments?.getInt("notificationColor") ?: -1
+                            NotificationDetailsScreen(
+                                navController = navController,
+                                notificationColor = color
+                            )
                         }
                     }
                 }
