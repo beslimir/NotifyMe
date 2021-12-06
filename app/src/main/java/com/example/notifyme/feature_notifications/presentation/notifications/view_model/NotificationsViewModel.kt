@@ -6,7 +6,6 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
