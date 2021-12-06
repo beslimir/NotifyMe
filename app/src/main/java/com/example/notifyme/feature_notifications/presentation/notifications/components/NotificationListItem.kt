@@ -1,13 +1,11 @@
 package com.example.notifyme.feature_notifications.presentation.notifications.components
 
-import android.widget.Toast
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,10 +15,13 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.clipPath
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
+import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 
 @Composable
@@ -29,7 +30,7 @@ fun NotificationListItem(
     modifier: Modifier = Modifier,
 //    onItemClick: (NotificationItem) -> Unit
     cornerRadius: Dp = 10.dp,
-    cutCornerSize: Dp = 30.dp
+    cutCornerSize: Dp = 25.dp
 ) {
     Box(
         modifier = modifier
@@ -81,18 +82,27 @@ fun NotificationListItem(
                 overflow = TextOverflow.Ellipsis
             )
         }
-//        IconButton(
-//            onClick = onDeleteClick,
-//            modifier = Modifier.align(Alignment.BottomEnd)
-//        ) {
-//            Icon(
-//                imageVector = Icons.Default.Delete,
-//                contentDescription = "Delete notification")
-//        }
+        //TODO: Temoraty - just for demo purpose
+        IconButton(
+            onClick = { },
+            modifier = Modifier.align(Alignment.BottomEnd)
+        ) {
+            val painter: Painter?
+            val tint: Color?
+            if (notificationItem.details[0].icon_type == "heart") {
+                painter = painterResource(id = R.drawable.ic_heart)
+                tint = Color.Red.copy(alpha = 0.25f)
+            } else {
+                painter = painterResource(id = R.drawable.ic_fire)
+                tint = Color.DarkGray.copy(alpha = 0.25f)
+            }
+            Icon(
+                painter = painter,
+                contentDescription = notificationItem.details[0].icon_type,
+                tint = tint
+            )
+        }
     }
-
-
-
 
 
 //    Row(
