@@ -3,7 +3,6 @@ package com.example.notifyme.feature_notifications.presentation.settings
 import android.app.TimePickerDialog
 import android.content.Context
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,9 +34,10 @@ fun SettingsScreen(
                     .fillMaxWidth()
                     .clickable {
                         if (listItem == "Time management") {
-                            showTimePicker(context)
+                            showTimePicker(context, viewModel)
                         } else {
-                            Toast.makeText(context,"Will be implemented soon...",Toast.LENGTH_SHORT).show()
+                            //TODO: Temporary...
+                            viewModel.onEvent(SettingsEvent.GetNotificationTime)
                         }
                     }
             )
@@ -46,7 +46,7 @@ fun SettingsScreen(
     }
 }
 
-fun showTimePicker(context: Context) {
+fun showTimePicker(context: Context, viewModel: SettingsViewModel) {
     val c = Calendar.getInstance()
     val hour = c.get(Calendar.HOUR_OF_DAY)
     val minute = c.get(Calendar.MINUTE)
@@ -54,6 +54,7 @@ fun showTimePicker(context: Context) {
     val timePickerDialog = TimePickerDialog(
         context,
         TimePickerDialog.OnTimeSetListener { view, hourOfDay, minuteOfHour ->
+            viewModel.onEvent(SettingsEvent.SaveNotificationTime("$hourOfDay:$minuteOfHour"))
             Log.d("aaaa", "values: $hourOfDay:$minuteOfHour")
         }, hour, minute, true
     )

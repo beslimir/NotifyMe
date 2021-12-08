@@ -47,7 +47,7 @@ class NotificationsViewModel @Inject constructor(
     application: Application,
     private val alarmManager: AlarmManager,
     private val prefsManager: PrefsManager
-) : AndroidViewModel(application)/*, SelectedTime*/ {
+): AndroidViewModel(application) {
 
     private val _state = mutableStateOf(NotificationState())
     val state: State<NotificationState> = _state

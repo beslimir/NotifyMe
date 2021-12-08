@@ -2,6 +2,7 @@ package com.example.notifyme.feature_notifications.util
 
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object DataTimeConverter {
 
@@ -32,6 +33,22 @@ object DataTimeConverter {
         }
 
         return "01.01.1900."
+    }
+
+    fun convertTimeToMillis(time: String): Long {
+        val hours = time.substringBefore(":").toLong()
+        val minutes = time.substringAfter(":").toLong()
+        val millis = TimeUnit.HOURS.toMillis(hours) + TimeUnit.MINUTES.toMillis(minutes)
+
+        return millis
+    }
+
+    fun convertMillisToTime(millis: Long): String {
+        return String.format(
+            "%02d:%02d",
+            TimeUnit.MILLISECONDS.toHours(millis),
+            TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis))
+        )
     }
 
 
