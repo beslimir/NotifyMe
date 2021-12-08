@@ -1,6 +1,5 @@
 package com.example.notifyme.feature_notifications.presentation.notifications
 
-import android.app.TimePickerDialog
 import android.content.Context
 import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
@@ -13,8 +12,6 @@ import androidx.compose.material.icons.filled.Doorbell
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -24,7 +21,6 @@ import com.example.notifyme.feature_notifications.presentation.Screen
 import com.example.notifyme.feature_notifications.presentation.notifications.components.NotificationListItem
 import com.example.notifyme.feature_notifications.presentation.notifications.components.OrderSection
 import com.example.notifyme.feature_notifications.presentation.notifications.view_model.NotificationsViewModel
-import java.util.*
 
 @ExperimentalAnimationApi
 @Composable
@@ -83,9 +79,7 @@ fun NotificationsScreen(
                     }
                     IconButton(
                         onClick = {
-                            viewModel.onEvent(NotificationEvent.OpenSettings)
-//                            showTimePicker(context = context)
-                            //TODO: Implement Time Picker later...
+                            navController.navigate(Screen.SettingsScreen.route)
                         }
                     ) {
                         Icon(
@@ -118,33 +112,15 @@ fun NotificationsScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .clickable {
-                                navController.navigate(Screen.NotificationDetailsScreen.route +
-                                        "?notificationId=${notificationItem.id}&notificationColor=${notificationItem.color}")
+                                navController.navigate(
+                                    Screen.NotificationDetailsScreen.route +
+                                            "?notificationId=${notificationItem.id}&notificationColor=${notificationItem.color}"
+                                )
                             }
-//                        onItemClick = {
-//                            navController.navigate(Screen.NotificationDetailsScreen.route +
-//                                    "?notificationId=${notificationItem.id}&notificationColor=${notificationItem.color}")
-//                        }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                 }
             }
         }
     }
-}
-
-
-fun showTimePicker(context: Context) {
-    val c = Calendar.getInstance()
-    val hour = c.get(Calendar.HOUR_OF_DAY)
-    val minute = c.get(Calendar.MINUTE)
-
-    val time = mutableStateOf("")
-    val timePickerDialog = TimePickerDialog(
-        context,
-        { _, hour: Int, minute: Int ->
-            time.value = "$hour:$minute"
-        }, hour, minute, false
-    )
-    timePickerDialog.show()
 }

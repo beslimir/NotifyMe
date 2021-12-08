@@ -82,7 +82,7 @@ fun NotificationListItem(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        //TODO: Temoraty - just for demo purpose
+        //TODO: Temorary - just for demo purpose
         IconButton(
             onClick = { },
             modifier = Modifier.align(Alignment.BottomEnd)
@@ -103,19 +103,4 @@ fun NotificationListItem(
             )
         }
     }
-
-
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .clickable { onItemClick(notificationItem) }
-//            .padding(20.dp),
-//        horizontalArrangement = Arrangement.Start
-//    ) {
-//        Text(
-//            text = "${notificationItem.id}. ${notificationItem.title}",
-//            style = MaterialTheme.typography.body1,
-//            overflow = TextOverflow.Ellipsis
-//        )
-//    }
 }

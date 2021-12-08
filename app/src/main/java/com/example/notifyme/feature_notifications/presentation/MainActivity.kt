@@ -14,6 +14,7 @@ import androidx.navigation.navArgument
 import com.example.notifyme.feature_notifications.presentation.ui.theme.NotifyMeAppTheme
 import com.example.notifyme.feature_notifications.presentation.notification_details.NotificationDetailsScreen
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationsScreen
+import com.example.notifyme.feature_notifications.presentation.settings.SettingsScreen
 
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -51,6 +52,9 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 notificationColor = color
                             )
+                        }
+                        composable(route = Screen.SettingsScreen.route) {
+                            SettingsScreen(navController = navController, context = this@MainActivity)
                         }
                     }
                 }
