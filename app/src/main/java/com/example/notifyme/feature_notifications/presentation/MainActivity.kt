@@ -15,6 +15,7 @@ import com.example.notifyme.feature_notifications.presentation.ui.theme.NotifyMe
 import com.example.notifyme.feature_notifications.presentation.notification_details.NotificationDetailsScreen
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationsScreen
 import com.example.notifyme.feature_notifications.presentation.settings.SettingsScreen
+import com.example.notifyme.feature_notifications.presentation.statement.StatementScreen
 
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,6 +56,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = Screen.SettingsScreen.route) {
                             SettingsScreen(navController = navController, context = this@MainActivity)
+                        }
+                        composable(route = Screen.StatementScreen.route) {
+                            StatementScreen(context = this@MainActivity)
                         }
                     }
                 }
