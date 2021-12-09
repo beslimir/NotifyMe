@@ -10,6 +10,7 @@ import com.example.notifyme.feature_notifications.util.DataTimeConverter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,5 +33,10 @@ class SettingsViewModel @Inject constructor(
             }
         }
     }
+
+    fun getNotificationTimeAsString(): String = runBlocking {
+        DataTimeConverter.convertMillisToTime(prefsManager.getNotificationTime())
+    }
+
 
 }

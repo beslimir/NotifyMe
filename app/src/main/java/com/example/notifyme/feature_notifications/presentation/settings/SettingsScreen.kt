@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.notifyme.feature_notifications.presentation.settings.components.SettingsListItem
+import com.example.notifyme.feature_notifications.presentation.settings.components.SettingsListItemDataClass
 import com.example.notifyme.feature_notifications.presentation.settings.view_model.SettingsViewModel
 import java.util.*
 
@@ -25,15 +26,21 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
     context: Context
 ) {
+    //Settings list objects
+    val object1 = SettingsListItemDataClass("Time management", "Set at what time you want the notifications to appear")
+    val object2 = SettingsListItemDataClass("Temporary 1", "Temporary text 1")
+    val object3 = SettingsListItemDataClass("Temporary 2", "Temporary text 2")
+
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        items(listOf("Time management", "Temporary 1", "Temporary 2")) { listItem ->
+        items(listOf(object1, object2, object3)) { listItem ->
             SettingsListItem(
                 listItem = listItem,
+                viewModel = viewModel,
                 modifier = Modifier
                     .fillMaxWidth()
                     .clickable {
-                        if (listItem == "Time management") {
+                        if (listItem.title == "Time management") {
                             showTimePicker(context, viewModel)
                         } else {
                             //TODO: Temporary...

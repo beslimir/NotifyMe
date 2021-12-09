@@ -13,10 +13,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.example.notifyme.feature_notifications.presentation.settings.view_model.SettingsViewModel
 
 @Composable
 fun SettingsListItem(
-    listItem: String,
+    listItem: SettingsListItemDataClass,
+    viewModel: SettingsViewModel,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -35,12 +37,12 @@ fun SettingsListItem(
                 horizontalAlignment = Alignment.Start,
             ) {
                 Text(
-                    text = listItem,
+                    text = listItem.title,
                     style = MaterialTheme.typography.subtitle1,
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = "Set at what time you want the notifications to appear",
+                    text = listItem.description,
                     style = MaterialTheme.typography.body2,
                     overflow = TextOverflow.Ellipsis,
                     color = Color.LightGray
@@ -51,16 +53,29 @@ fun SettingsListItem(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.End
             ) {
-                IconButton(
-                    onClick = { }
+                Column(
+                    Modifier.fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Timer,
-                        contentDescription = "Time"
-                    )
+                    IconButton(
+                        onClick = { }
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Timer,
+                            contentDescription = "Time"
+                        )
+                    }
+                    if (listItem.title == "Time management") {
+                        Text(
+                            text = viewModel.getNotificationTimeAsString(),
+                            style = MaterialTheme.typography.body2,
+                            overflow = TextOverflow.Ellipsis,
+                            color = Color.LightGray
+                        )
+                    }
                 }
             }
         }
     }
-
 }
