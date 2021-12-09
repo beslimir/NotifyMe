@@ -51,5 +51,21 @@ object DataTimeConverter {
         )
     }
 
+    fun formatTimeString(hourOfDay: Int, minuteOfHour: Int): String {
+        var time: String
+        if (hourOfDay < 10) {
+            time = "0$hourOfDay:$minuteOfHour"
+            if (minuteOfHour < 10) {
+                time = "0$hourOfDay:0$minuteOfHour"
+            }
+        } else if (minuteOfHour < 10) {
+            time = "$hourOfDay:0$minuteOfHour"
+        } else {
+            time = "$hourOfDay:$minuteOfHour"
+        }
+
+        return time
+    }
+
 
 }
