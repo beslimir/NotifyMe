@@ -14,9 +14,11 @@ import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.presentation.Screen
 import com.example.notifyme.feature_notifications.presentation.notifications.components.NotificationListItem
 import com.example.notifyme.feature_notifications.presentation.notifications.components.OrderSection
@@ -59,7 +61,7 @@ fun NotificationsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Notify me",
+                    text = stringResource(R.string.notify_me),
                     style = MaterialTheme.typography.h6
                 )
                 Row(

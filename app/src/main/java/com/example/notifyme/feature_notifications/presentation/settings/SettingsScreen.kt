@@ -13,9 +13,11 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.presentation.settings.components.SettingsListItem
 import com.example.notifyme.feature_notifications.presentation.settings.components.SettingsListItemDataClass
 import com.example.notifyme.feature_notifications.presentation.settings.view_model.SettingsViewModel
@@ -28,18 +30,18 @@ fun SettingsScreen(
 ) {
     //Settings list objects
     val object1 = SettingsListItemDataClass(
-        "Time management",
-        "Set at what time you want the notifications to appear",
+        stringResource(R.string.settings_item_1),
+        stringResource(R.string.settings_item_1_description),
         Icons.Default.Timer
     )
     val object2 = SettingsListItemDataClass(
-        "Statement",
-        "Click here to accept and read the statement",
+        stringResource(R.string.settings_item_2),
+        stringResource(R.string.settings_item_2_description),
         Icons.Default.Assignment
     )
     val object3 = SettingsListItemDataClass(
-        "Credits & Info",
-        "Read all about the app",
+        stringResource(R.string.settings_item_3),
+        stringResource(R.string.settings_item_3_description),
         Icons.Default.Edit
     )
 
@@ -54,7 +56,7 @@ fun SettingsScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Settings",
+                text = stringResource(R.string.settings),
                 style = MaterialTheme.typography.h6
             )
             Row(

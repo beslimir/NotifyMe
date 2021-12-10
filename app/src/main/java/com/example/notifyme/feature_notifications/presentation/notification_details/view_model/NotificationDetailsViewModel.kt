@@ -1,11 +1,14 @@
 package com.example.notifyme.feature_notifications.presentation.notification_details.view_model
 
+import android.app.Application
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.data.local.NotificationItemEntity
 import com.example.notifyme.feature_notifications.domain.model.NotificationDetails
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
@@ -21,8 +24,9 @@ import javax.inject.Inject
 @HiltViewModel
 class NotificationDetailsViewModel @Inject constructor(
     private val useCases: UseCasesWrapper,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+    savedStateHandle: SavedStateHandle,
+    application: Application
+) : AndroidViewModel(application) {
 
     private val _notificationItemContent = mutableStateOf("Notification Item Content")
     val notificationItemContent: State<String> = _notificationItemContent
@@ -90,7 +94,7 @@ class NotificationDetailsViewModel @Inject constructor(
                     } catch (e: Exception) {
                         _eventFlow.emit(
                             UiEvent.ShowSnackBar(
-                                message = e.message ?: "Couldn't save the notification..."
+                                message = e.message ?: getApplication<Application>().getString(R.string.notification_not_saved)
                             )
                         )
                     }

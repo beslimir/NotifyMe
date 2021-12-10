@@ -14,10 +14,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.presentation.Screen
 import com.example.notifyme.feature_notifications.presentation.settings.SettingsEvent
 import com.example.notifyme.feature_notifications.presentation.settings.view_model.SettingsViewModel
@@ -40,7 +42,7 @@ fun SettingsListItem(
             .padding(16.dp)
             .clickable {
                 when (listItem.title) {
-                    "Time management" -> {
+                    context.getString(R.string.settings_item_1) -> {
                         //Open the TimePickerDialog
                         val c = Calendar.getInstance()
                         val hour = c.get(Calendar.HOUR_OF_DAY)
@@ -55,10 +57,10 @@ fun SettingsListItem(
                         )
                         timePickerDialog.show()
                     }
-                    "Statement" -> {
+                    context.getString(R.string.settings_item_2) -> {
                         navController.navigate(Screen.StatementScreen.route)
                     }
-                    "Credits & Info" -> {
+                    context.getString(R.string.settings_item_3) -> {
                         navController.navigate(Screen.CreditsScreen.route)
                     }
                     else -> {
@@ -109,7 +111,7 @@ fun SettingsListItem(
                             contentDescription = "Time"
                         )
                     }
-                    if (listItem.title == "Time management") {
+                    if (listItem.title == context.getString(R.string.settings_item_1)) {
                         Text(
                             text = time,
                             style = MaterialTheme.typography.body2,

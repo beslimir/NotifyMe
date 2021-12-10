@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.notifyme.R
@@ -36,7 +37,7 @@ fun StatementScreen(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Statement",
+                text = stringResource(R.string.settings_item_2),
                 style = MaterialTheme.typography.h6
             )
 
@@ -54,7 +55,7 @@ fun StatementScreen(
             .fillMaxSize()
             .padding(16.dp)
         ) {
-            var text by remember { mutableStateOf("With this statement, I confess that...") }
+            var text by remember { mutableStateOf(context.getString(R.string.statement_text_1)) }
             Row(
                 horizontalArrangement = Arrangement.Start,
                 verticalAlignment = Alignment.Top,
@@ -77,20 +78,20 @@ fun StatementScreen(
                 ) {
                     Image(
                         painter = painterResource(id = R.drawable.ic_heart_shape),
-                        contentDescription = "Click to reveal the full text",
+                        contentDescription = stringResource(R.string.statement_text_click_reveal),
                         modifier = Modifier
                             .size(144.dp)
                             .clickable {
                                 viewModel.onEvent(StatementEvent.OpenStatement)
                                 text =
-                                    "With this statement, I confess that FC Bayern beat Barcelona last night 3:0!"
+                                    context.getString(R.string.statement_text_2)
                             }
                     )
                     Text(
                         text = if (!state.isStatementOpened) {
-                            "Click me to accept and read the statement!"
+                            stringResource(R.string.statement_text_click_accept)
                         } else {
-                            "Statement accepted!"
+                            stringResource(R.string.statement_text_accepted)
                         }
                     )
                 }
@@ -107,11 +108,11 @@ fun StatementScreen(
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.ic_heart),
-                            contentDescription = "Full text revealed",
+                            contentDescription = stringResource(R.string.statement_text_full_revealed),
                             modifier = Modifier
                                 .size(144.dp)
                         )
-                        Text(text = "Statement accepted!")
+                        Text(text = stringResource(R.string.statement_text_accepted))
                     }
                 }
 

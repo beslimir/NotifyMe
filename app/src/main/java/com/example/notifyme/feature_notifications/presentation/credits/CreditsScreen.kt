@@ -7,11 +7,13 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Assignment
-import androidx.compose.material.icons.filled.Mail
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.example.notifyme.R
 
 @Composable
 fun CreditsScreen() {
@@ -26,7 +28,7 @@ fun CreditsScreen() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = "Credits & Info",
+                text = stringResource(R.string.settings_item_3),
                 style = MaterialTheme.typography.h6
             )
             IconButton(
@@ -34,7 +36,7 @@ fun CreditsScreen() {
             ) {
                 Icon(
                     imageVector = Icons.Default.Assignment,
-                    contentDescription = "Credits & Info",
+                    contentDescription = stringResource(R.string.settings_item_3),
                 )
             }
         }
@@ -44,12 +46,9 @@ fun CreditsScreen() {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Text(text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod " +
-                    "tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, " +
-                    "quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo " +
-                    "consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse " +
-                    "cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat " +
-                    "non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+            Text(
+                text = stringResource(R.string.credits_text),
+                textAlign = TextAlign.Justify
             )
         }
 
