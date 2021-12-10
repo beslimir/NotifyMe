@@ -9,8 +9,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Android
-import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,15 +29,18 @@ fun SettingsScreen(
     //Settings list objects
     val object1 = SettingsListItemDataClass(
         "Time management",
-        "Set at what time you want the notifications to appear"
+        "Set at what time you want the notifications to appear",
+        Icons.Default.Timer
     )
     val object2 = SettingsListItemDataClass(
         "Statement",
-        "Click here to accept and read the statement"
+        "Click here to accept and read the statement",
+        Icons.Default.Assignment
     )
     val object3 = SettingsListItemDataClass(
-        "Temporary 2",
-        "Temporary text 2"
+        "Credits & Info",
+        "Read all about the app",
+        Icons.Default.Edit
     )
 
     Column(

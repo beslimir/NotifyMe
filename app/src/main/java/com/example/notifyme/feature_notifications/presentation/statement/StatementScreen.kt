@@ -50,7 +50,10 @@ fun StatementScreen(
             }
         }
 
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+        ) {
             var text by remember { mutableStateOf("With this statement, I confess that...") }
             Row(
                 horizontalArrangement = Arrangement.Start,

@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -57,6 +58,9 @@ fun SettingsListItem(
                     "Statement" -> {
                         navController.navigate(Screen.StatementScreen.route)
                     }
+                    "Credits & Info" -> {
+                        navController.navigate(Screen.CreditsScreen.route)
+                    }
                     else -> {
                         //TODO: Temporary...
                         viewModel.onEvent(SettingsEvent.GetNotificationTime)
@@ -77,7 +81,8 @@ fun SettingsListItem(
                 Text(
                     text = listItem.title,
                     style = MaterialTheme.typography.subtitle1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = listItem.description,
@@ -100,7 +105,7 @@ fun SettingsListItem(
                         onClick = { }
                     ) {
                         Icon(
-                            imageVector = Icons.Default.Timer,
+                            imageVector = listItem.icon,
                             contentDescription = "Time"
                         )
                     }
