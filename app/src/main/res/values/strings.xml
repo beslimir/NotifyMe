@@ -1,5 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">NotifyMe</string>
+    <string name="settings_item_4">Countdown</string>
+    <string name="settings_item_4_description">Check time info of when the event will happen</string>
     <string name="settings_item_3"><![CDATA[Credits & Info]]></string>
     <string name="settings_item_3_description">Read all about the app</string>
     <string name="settings_item_2">Statement</string>
@@ -18,4 +20,5 @@
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
     <string name="notification_not_saved">Couldn\'t save the notification...</string>
+    <string name="countdown_text">Enter the date and time of when the event will happen</string>
 </resources>

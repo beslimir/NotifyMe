@@ -63,6 +63,9 @@ fun SettingsListItem(
                     context.getString(R.string.settings_item_3) -> {
                         navController.navigate(Screen.CreditsScreen.route)
                     }
+                    context.getString(R.string.settings_item_4) -> {
+                        navController.navigate(Screen.CountdownScreen.route)
+                    }
                     else -> {
                         //TODO: Temporary...
                         viewModel.onEvent(SettingsEvent.GetNotificationTime)

@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.notifyme.feature_notifications.presentation.countdown.CountdownScreen
 import com.example.notifyme.feature_notifications.presentation.credits.CreditsScreen
 import com.example.notifyme.feature_notifications.presentation.ui.theme.NotifyMeAppTheme
 import com.example.notifyme.feature_notifications.presentation.notification_details.NotificationDetailsScreen
@@ -63,6 +64,9 @@ class MainActivity : ComponentActivity() {
                         }
                         composable(route = Screen.CreditsScreen.route) {
                             CreditsScreen()
+                        }
+                        composable(route = Screen.CountdownScreen.route) {
+                            CountdownScreen()
                         }
                     }
                 }

@@ -32,7 +32,7 @@ fun SettingsScreen(
     val object1 = SettingsListItemDataClass(
         stringResource(R.string.settings_item_1),
         stringResource(R.string.settings_item_1_description),
-        Icons.Default.Timer
+        Icons.Default.Timelapse
     )
     val object2 = SettingsListItemDataClass(
         stringResource(R.string.settings_item_2),
@@ -43,6 +43,11 @@ fun SettingsScreen(
         stringResource(R.string.settings_item_3),
         stringResource(R.string.settings_item_3_description),
         Icons.Default.Edit
+    )
+    val object4 = SettingsListItemDataClass(
+        stringResource(R.string.settings_item_4),
+        stringResource(R.string.settings_item_4_description),
+        Icons.Default.Timer
     )
 
     Column(
@@ -84,7 +89,7 @@ fun SettingsScreen(
             }
         }
         LazyColumn(modifier = Modifier.fillMaxSize()) {
-            items(listOf(object1, object2, object3)) { listItem ->
+            items(listOf(object1, object2, object3, object4)) { listItem ->
                 SettingsListItem(
                     navController = navController,
                     context = context,
