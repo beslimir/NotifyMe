@@ -14,7 +14,7 @@ import com.example.notifyme.feature_notifications.presentation.TemporaryActivity
 class TimerBroadcast: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val id: Int? = intent?.getIntExtra("nextItemId", 1)
+        val date: Long? = intent?.getLongExtra("nextItemDate", 1)
         val title: String? = intent?.getStringExtra("nextItemTitle")
 
         val myIntent = Intent(context, TemporaryActivity::class.java)
@@ -24,8 +24,8 @@ class TimerBroadcast: BroadcastReceiver() {
         val builder = NotificationCompat.Builder(context!!, MY_CHANNEL)
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
-            .setContentTitle("Content title id: $title")
-            .setContentText("Content Text: $id")
+            .setContentTitle("Content title: $title")
+            .setContentText("Content Text: $date")
             .setPriority(Notification.DEFAULT_SOUND)
             .setAutoCancel(true)
 

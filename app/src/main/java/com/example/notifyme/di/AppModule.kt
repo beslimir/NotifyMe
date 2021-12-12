@@ -43,6 +43,7 @@ object AppModule {
         getNotificationByIdUseCase = GetNotificationByIdUseCase(repository),
         getNotificationByDateUseCase = GetNotificationByDateUseCase(repository),
         insertNotificationUseCase = InsertNotificationUseCase(repository),
+        updateDateToAllNotificationsUseCase = UpdateDateToAllNotificationsUseCase(repository),
         deleteNotificationUseCase = DeleteNotificationUseCase(repository)
     )
 

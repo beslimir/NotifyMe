@@ -10,6 +10,7 @@ interface NotificationRepository {
     suspend fun getNotificationById(id: Int): NotificationItem
     suspend fun getNotificationByDate(date: Long): NotificationItem
     suspend fun insertNotification(notificationItem: NotificationItem)
+    suspend fun updateDateToAllNotifications(date: Long)
     suspend fun deleteNotification(notificationItem: NotificationItem)
 
 }

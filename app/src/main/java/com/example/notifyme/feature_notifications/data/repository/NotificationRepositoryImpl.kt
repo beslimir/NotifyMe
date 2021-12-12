@@ -44,6 +44,10 @@ class NotificationRepositoryImpl(
         notificationDao.insertNotification(notificationItem.toNotificationItemEntity())
     }
 
+    override suspend fun updateDateToAllNotifications(date: Long) {
+        notificationDao.updateDateToAllNotifications(date)
+    }
+
     override suspend fun deleteNotification(notificationItem: NotificationItem) {
         notificationDao.deleteNotification(notificationItem.toNotificationItemEntity())
     }

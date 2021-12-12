@@ -67,5 +67,20 @@ object DataTimeConverter {
         return time
     }
 
+    fun getTodayDateStringFormat(): String {
+        val calendar = Calendar.getInstance(TimeZone.getDefault())
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy.", Locale.GERMAN)
+
+        return dateFormat.format(calendar.timeInMillis)
+    }
+
+    fun getTodayDateMillisFormat(): Long {
+        val calendar = Calendar.getInstance(TimeZone.getDefault())
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy.", Locale.GERMAN)
+        val dateString = dateFormat.format(calendar.timeInMillis)
+
+        return convertDateToMillis(dateString)
+    }
+
 
 }

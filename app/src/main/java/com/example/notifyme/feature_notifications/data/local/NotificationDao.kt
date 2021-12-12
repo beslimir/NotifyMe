@@ -28,6 +28,9 @@ interface NotificationDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertNotification(notificationItem: NotificationItemEntity)
 
+    @Query("UPDATE NotificationItemEntity SET date = :date + date")
+    suspend fun updateDateToAllNotifications(date: Long)
+
     @Delete
     suspend fun deleteNotification(notificationItem: NotificationItemEntity)
 

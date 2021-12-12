@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.data.local.NotificationItemEntity
@@ -15,6 +14,7 @@ import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 import com.example.notifyme.feature_notifications.domain.use_cases.UseCasesWrapper
 import com.example.notifyme.feature_notifications.presentation.notification_details.NotificationDetailsEvent
 import com.example.notifyme.feature_notifications.util.DataTimeConverter.convertDateToMillis
+import com.example.notifyme.feature_notifications.util.DataTimeConverter.getTodayDateStringFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -43,8 +43,7 @@ class NotificationDetailsViewModel @Inject constructor(
     private val _notificationItemTitle = mutableStateOf("Notification Item Title")
     val notificationItemTitle: State<String> = _notificationItemTitle
 
-    //TODO: Change the date to today's
-    private val _notificationItemDate = mutableStateOf(convertDateToMillis("05.12.2021."))
+    private val _notificationItemDate = mutableStateOf(convertDateToMillis(getTodayDateStringFormat()))
     val notificationItemDate: State<Long> = _notificationItemDate
 
     private val _notificationItemColor = mutableStateOf(NotificationItemEntity.notificationItemColors.random().toArgb())

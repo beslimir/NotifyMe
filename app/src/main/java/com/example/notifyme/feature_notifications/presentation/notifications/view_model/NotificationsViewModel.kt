@@ -26,6 +26,7 @@ import com.example.notifyme.feature_notifications.presentation.TemporaryActivity
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationEvent
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationState
 import com.example.notifyme.feature_notifications.util.DataTimeConverter
+import com.example.notifyme.feature_notifications.util.DataTimeConverter.getTodayDateMillisFormat
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -47,13 +48,13 @@ class NotificationsViewModel @Inject constructor(
     application: Application,
     private val alarmManager: AlarmManager,
     private val prefsManager: PrefsManager
-): AndroidViewModel(application) {
+) : AndroidViewModel(application) {
 
     private val _state = mutableStateOf(NotificationState())
     val state: State<NotificationState> = _state
 
-    private val NOTIFICATION_HOURS = 4
-    private val NOTIFICATION_MINUTES = 40
+    private val NOTIFICATION_HOURS = 6
+    private val NOTIFICATION_MINUTES = 0
     private val ONE_DAY_IN_MILLIS = 86400000
 
     private var getNotificationsJob: Job? = null
@@ -67,7 +68,8 @@ class NotificationsViewModel @Inject constructor(
             //if nextItemId == 0, that means the app is never opened before
             if (prefsManager.getNextItemId() == 0) {
                 //get all data from local json file
-                val myJson = getJsonFromLocalFile(getApplication<Application>().assets.open("notify_me_msg.json"))
+                val myJson =
+                    getJsonFromLocalFile(getApplication<Application>().assets.open("notify_me_msg.json"))
                 //save retrieved data to Room db
                 saveRetrievedDataToRoomDb(myJson)
                 //increment nextItemId so it's > 0
@@ -166,6 +168,17 @@ class NotificationsViewModel @Inject constructor(
     /** Push Notification functions **/
 
     private fun sendNotificationOfNextItem() {
+        //TODO: Set notification time from prefsManager ->
+//        val notificationTimeLong = prefsManager.getNotificationTime()
+//        val notificationTimeString = DataTimeConverter.convertMillisToTime(notificationTimeLong)
+//        val notificationHours = notificationTimeString.substringBefore(":").toInt()
+//        val notificationMinutes = notificationTimeString.substringAfter(":").toInt()
+//
+//        val calendar = Calendar.getInstance()
+//        calendar.set(Calendar.HOUR_OF_DAY, notificationHours)
+//        calendar.set(Calendar.MINUTE, notificationMinutes)
+//        calendar.set(Calendar.SECOND, 0)
+
         val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, NOTIFICATION_HOURS)
         calendar.set(Calendar.MINUTE, NOTIFICATION_MINUTES)
@@ -177,12 +190,12 @@ class NotificationsViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            val id: Int = prefsManager.getNextItemId()
-            val notificationItem: NotificationItem = useCases.getNotificationByIdUseCase(id)
+            val date: Long = getTodayDateMillisFormat() + prefsManager.getNotificationTime()
+            val notificationItem: NotificationItem = useCases.getNotificationByDateUseCase(date)
             val title: String = notificationItem.title
 
             val intent = Intent(getApplication(), TimerBroadcast::class.java).apply {
-                putExtra("nextItemId", id)
+                putExtra("nextItemDate", date)
                 putExtra("nextItemTitle", title)
             }
             val pendingIntent = PendingIntent.getBroadcast(
