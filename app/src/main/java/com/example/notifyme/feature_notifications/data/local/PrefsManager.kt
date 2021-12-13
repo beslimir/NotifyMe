@@ -1,14 +1,13 @@
 package com.example.notifyme.feature_notifications.data.local
 
 import android.content.Context
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import com.example.notifyme.feature_notifications.util.Constants
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
 import javax.inject.Singleton
 
 @Singleton
@@ -21,11 +20,12 @@ class PrefsManager(
         val NOTIFICATION_TIME = longPreferencesKey("notification_time")
         val START_DATE = stringPreferencesKey("start_date")
         val END_DATE = stringPreferencesKey("end_date")
+        val STATEMENT_ACCEPTED = booleanPreferencesKey("statement_accepted")
     }
 
     /** Save/Get start & end date **/
 
-    suspend fun saveStartDate(startDate: String){
+    suspend fun saveStartDate(startDate: String) {
         context.dataStore.edit { preferences ->
             preferences[START_DATE] = startDate
         }
@@ -35,7 +35,7 @@ class PrefsManager(
         return context.dataStore.data.first()[START_DATE] ?: Constants.START_DATE
     }
 
-    suspend fun saveEndDate(endDate: String){
+    suspend fun saveEndDate(endDate: String) {
         context.dataStore.edit { preferences ->
             preferences[END_DATE] = endDate
         }
@@ -47,7 +47,7 @@ class PrefsManager(
 
     /** Notification time **/
 
-    suspend fun saveNotificationTime(millis: Long){
+    suspend fun saveNotificationTime(millis: Long) {
         context.dataStore.edit { preferences ->
             preferences[NOTIFICATION_TIME] = millis
         }
@@ -55,6 +55,18 @@ class PrefsManager(
 
     suspend fun getNotificationTime(): Long {
         return context.dataStore.data.first()[NOTIFICATION_TIME] ?: 0
+    }
+
+    /** Statement **/
+
+    suspend fun saveStatement() {
+        context.dataStore.edit { preferences ->
+            preferences[STATEMENT_ACCEPTED] = true
+        }
+    }
+
+    suspend fun getStatement(): Boolean {
+        return context.dataStore.data.first()[STATEMENT_ACCEPTED] ?: false
     }
 
 //    //not returning new value after exit of app (back button) and returning

@@ -51,9 +51,10 @@ fun StatementScreen(
             }
         }
 
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
             var text by remember { mutableStateOf(context.getString(R.string.statement_text_1)) }
             Row(
@@ -61,9 +62,15 @@ fun StatementScreen(
                 verticalAlignment = Alignment.Top,
                 modifier = Modifier.weight(1f)
             ) {
-                Text(text = text)
+                Text(
+                    text = if (!viewModel.isStatementAccepted()) {
+                        text
+                    } else {
+                        context.getString(R.string.statement_text_2)
+                    }
+                )
             }
-            //TODO: Temporary...
+
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -77,18 +84,25 @@ fun StatementScreen(
                     verticalArrangement = Arrangement.Center
                 ) {
                     Image(
-                        painter = painterResource(id = R.drawable.ic_heart_shape),
+                        painter = painterResource(
+                            id = if (!viewModel.isStatementAccepted()) {
+                                R.drawable.ic_heart_shape
+                            } else {
+                                R.drawable.ic_heart
+                            }
+                        ),
                         contentDescription = stringResource(R.string.statement_text_click_reveal),
                         modifier = Modifier
                             .size(144.dp)
                             .clickable {
-                                viewModel.onEvent(StatementEvent.OpenStatement)
-                                text =
-                                    context.getString(R.string.statement_text_2)
+                                if (!viewModel.isStatementAccepted()) {
+                                    viewModel.onEvent(StatementEvent.OpenStatement)
+                                    text = context.getString(R.string.statement_text_2)
+                                }
                             }
                     )
                     Text(
-                        text = if (!state.isStatementOpened) {
+                        text = if (!viewModel.isStatementAccepted()) {
                             stringResource(R.string.statement_text_click_accept)
                         } else {
                             stringResource(R.string.statement_text_accepted)
