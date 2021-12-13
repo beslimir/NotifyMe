@@ -2,35 +2,25 @@ package com.example.notifyme.feature_notifications.presentation.notifications.vi
 
 import android.app.AlarmManager
 import android.app.Application
-import android.app.Notification
-import android.app.PendingIntent
-import android.content.Intent
-import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.notifyme.BaseApplication
-import com.example.notifyme.R
-import com.example.notifyme.feature_notifications.broadcasts.TimerBroadcast
 import com.example.notifyme.feature_notifications.data.local.NotificationItemEntity
 import com.example.notifyme.feature_notifications.data.local.PrefsManager
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 import com.example.notifyme.feature_notifications.domain.use_cases.UseCasesWrapper
 import com.example.notifyme.feature_notifications.domain.util.OrderType
-import com.example.notifyme.feature_notifications.presentation.TemporaryActivity
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationEvent
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationState
 import com.example.notifyme.feature_notifications.util.Constants
+import com.example.notifyme.feature_notifications.util.Constants.ONE_DAY_IN_MILLIS
 import com.example.notifyme.feature_notifications.util.Constants.TAG
 import com.example.notifyme.feature_notifications.util.DataTimeConverter
 import com.example.notifyme.feature_notifications.util.DataTimeConverter.convertMillisToDate
-import com.example.notifyme.feature_notifications.util.DataTimeConverter.getTodayDateMillisFormat
 import com.example.notifyme.feature_notifications.util.NotificationUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -59,10 +49,6 @@ class NotificationsViewModel @Inject constructor(
     private val _state = mutableStateOf(NotificationState())
     val state: State<NotificationState> = _state
 
-    private val NOTIFICATION_HOURS = 6
-    private val NOTIFICATION_MINUTES = 0
-    private val ONE_DAY_IN_MILLIS = 86400000
-
     private var getNotificationsJob: Job? = null
 
     init {
@@ -74,7 +60,8 @@ class NotificationsViewModel @Inject constructor(
             //if start date == 01.01.1900., that means the app is never opened before
             if (prefsManager.getStartDate() == Constants.START_DATE) {
                 //get all data from local json file
-                val myJson = getJsonFromLocalFile(getApplication<Application>().assets.open("notify_me_msg.json"))
+                val myJson =
+                    getJsonFromLocalFile(getApplication<Application>().assets.open("notify_me_msg.json"))
                 //save retrieved data to Room db and DataStore
                 saveRetrievedDataToRoomDb(myJson)
 
@@ -155,11 +142,13 @@ class NotificationsViewModel @Inject constructor(
                 if (i == 0) {
                     val startDate = convertMillisToDate(it.date)
                     prefsManager.saveStartDate(startDate)
+                    Log.d(TAG, "saveRetrievedDataToRoomDb: i: $i, date: $startDate")
                 }
                 //save last date to DataStore
                 if (i == finalJson.length() - 1) {
                     val endDate = convertMillisToDate(it.date)
                     prefsManager.saveEndDate(endDate)
+                    Log.d(TAG, "saveRetrievedDataToRoomDb: i: $i, date: $endDate")
                 }
             }
             useCases.insertNotificationUseCase(

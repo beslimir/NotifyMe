@@ -13,10 +13,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.notifyme.R
+import com.example.notifyme.feature_notifications.presentation.credits.view_model.CreditsViewModel
 
 @Composable
-fun CreditsScreen() {
+fun CreditsScreen(
+    viewModel: CreditsViewModel = hiltViewModel()
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,8 +50,13 @@ fun CreditsScreen() {
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
+            val dates = viewModel.getCreditsText()
             Text(
-                text = stringResource(R.string.credits_text),
+                text = stringResource(
+                    R.string.credits_text,
+                    dates.substringBefore("-"),
+                    dates.substringAfter("-")
+                ),
                 textAlign = TextAlign.Justify
             )
         }

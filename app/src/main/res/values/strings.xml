@@ -8,7 +8,7 @@
     <string name="settings_item_2_description">Click here to accept and read the statement</string>
     <string name="settings_item_1">Time management</string>
     <string name="settings_item_1_description">Set at what time you want the notifications to appear</string>
-    <string name="credits_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</string>
+    <string name="credits_text">beslimir is the creator of the app.\nThe app is made for fun and serves as a daily notifier with some dedicated quotes.\n\nFirst notification will arrive on: %1$s\nLast notification will arrive on: %2$s</string>
     <string name="statement_text_1" tools:ignore="TypographyEllipsis">With this statement, I confess that...</string>
     <string name="statement_text_2">With this statement, I confess that FC Bayern beat Barcelona last night 3:0!</string>
     <string name="statement_text_click_reveal">Click to reveal the full text</string>
