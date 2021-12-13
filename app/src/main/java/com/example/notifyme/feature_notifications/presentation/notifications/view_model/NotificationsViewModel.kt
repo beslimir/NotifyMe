@@ -48,7 +48,8 @@ class NotificationsViewModel @Inject constructor(
     private val useCases: UseCasesWrapper,
     application: Application,
     private val alarmManager: AlarmManager,
-    private val prefsManager: PrefsManager
+    private val prefsManager: PrefsManager,
+    private val notificationUtil: NotificationUtil
 ) : AndroidViewModel(application) {
 
     private val _state = mutableStateOf(NotificationState())
@@ -84,7 +85,7 @@ class NotificationsViewModel @Inject constructor(
 
             withContext(Dispatchers.Default) {
                 //set notification for next item ready
-                NotificationUtil(prefsManager, alarmManager, getApplication(), useCases).prepareNotificationForNextItem()
+                notificationUtil.prepareNotificationForNextItem()
             }
         }
     }
@@ -105,7 +106,7 @@ class NotificationsViewModel @Inject constructor(
                 )
             }
             is NotificationEvent.SendNotification -> {
-                NotificationUtil(prefsManager, alarmManager, getApplication(), useCases).sendNotificationNow() //temporary function, for notification testing purpose
+                notificationUtil.sendNotificationNow() //temporary function, for notification testing purpose
             }
             is NotificationEvent.OpenSettings -> {
                 Toast.makeText(

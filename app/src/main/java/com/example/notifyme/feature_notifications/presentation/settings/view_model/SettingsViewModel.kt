@@ -27,7 +27,8 @@ class SettingsViewModel @Inject constructor(
     private val useCases: UseCasesWrapper,
     private val prefsManager: PrefsManager,
     private val alarmManager: AlarmManager,
-    application: Application
+    application: Application,
+    private val notificationUtil: NotificationUtil
 ) : AndroidViewModel(application) {
 
     fun onEvent(event: SettingsEvent) {
@@ -41,7 +42,7 @@ class SettingsViewModel @Inject constructor(
                     val difference = newNotificationTime - currentNotificationTime
                     useCases.updateDateToAllNotificationsUseCase(difference)
 
-                    NotificationUtil(prefsManager, alarmManager, getApplication(), useCases).prepareNotificationForNextItem()
+                    notificationUtil.prepareNotificationForNextItem()
                 }
             }
             is SettingsEvent.GetNotificationTime -> {

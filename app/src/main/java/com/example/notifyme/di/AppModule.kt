@@ -11,6 +11,7 @@ import com.example.notifyme.feature_notifications.data.repository.NotificationRe
 import com.example.notifyme.feature_notifications.data.util.GsonParser
 import com.example.notifyme.feature_notifications.domain.repository.NotificationRepository
 import com.example.notifyme.feature_notifications.domain.use_cases.*
+import com.example.notifyme.feature_notifications.util.NotificationUtil
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -55,4 +56,8 @@ object AppModule {
     @Provides
     fun providePrefsManager(app: Application) = PrefsManager(app)
 
+    @Singleton
+    @Provides
+    fun provideNotificationUtil(prefsManager: PrefsManager, alarmManager: AlarmManager, app: Application, useCases: UseCasesWrapper) =
+        NotificationUtil(prefsManager, alarmManager, app, useCases)
 }
