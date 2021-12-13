@@ -6,6 +6,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -25,7 +26,10 @@ import com.example.notifyme.feature_notifications.domain.util.OrderType
 import com.example.notifyme.feature_notifications.presentation.TemporaryActivity
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationEvent
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationState
+import com.example.notifyme.feature_notifications.util.Constants
+import com.example.notifyme.feature_notifications.util.Constants.TAG
 import com.example.notifyme.feature_notifications.util.DataTimeConverter
+import com.example.notifyme.feature_notifications.util.DataTimeConverter.convertMillisToDate
 import com.example.notifyme.feature_notifications.util.DataTimeConverter.getTodayDateMillisFormat
 import com.example.notifyme.feature_notifications.util.NotificationUtil
 import com.google.gson.Gson
@@ -67,15 +71,14 @@ class NotificationsViewModel @Inject constructor(
 
     private fun checkStatus() {
         viewModelScope.launch(Dispatchers.IO) {
-            //if nextItemId == 0, that means the app is never opened before
-            if (prefsManager.getNextItemId() == 0) {
+            //if start date == 01.01.1900., that means the app is never opened before
+            if (prefsManager.getStartDate() == Constants.START_DATE) {
                 //get all data from local json file
-                val myJson =
-                    getJsonFromLocalFile(getApplication<Application>().assets.open("notify_me_msg.json"))
-                //save retrieved data to Room db
+                val myJson = getJsonFromLocalFile(getApplication<Application>().assets.open("notify_me_msg.json"))
+                //save retrieved data to Room db and DataStore
                 saveRetrievedDataToRoomDb(myJson)
-                //increment nextItemId so it's > 0
-                prefsManager.incrementNextItemId()
+
+                Log.d(TAG, "checkStatus: First app opening")
             }
 
             withContext(Dispatchers.Main) {
@@ -87,6 +90,8 @@ class NotificationsViewModel @Inject constructor(
                 //set notification for next item ready
                 notificationUtil.prepareNotificationForNextItem()
             }
+
+            Log.d(TAG, "checkStatus")
         }
     }
 
@@ -145,14 +150,22 @@ class NotificationsViewModel @Inject constructor(
             ).also {
                 it.date = todayMillis + ONE_DAY_IN_MILLIS * i
                 it.color = NotificationItemEntity.notificationItemColors.random().toArgb()
+
+                //save first date to DataStore
+                if (i == 0) {
+                    val startDate = convertMillisToDate(it.date)
+                    prefsManager.saveStartDate(startDate)
+                }
+                //save last date to DataStore
+                if (i == finalJson.length() - 1) {
+                    val endDate = convertMillisToDate(it.date)
+                    prefsManager.saveEndDate(endDate)
+                }
             }
             useCases.insertNotificationUseCase(
                 notificationItem
             )
         }
-
-        //save last item id (list size)
-        prefsManager.saveLastItemId(finalJson.length())
     }
 
     private fun getAllNotifications(orderType: OrderType) {

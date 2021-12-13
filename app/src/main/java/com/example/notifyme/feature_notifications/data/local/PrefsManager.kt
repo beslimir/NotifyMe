@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.notifyme.feature_notifications.util.Constants
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import javax.inject.Singleton
@@ -16,32 +18,34 @@ class PrefsManager(
     val Context.dataStore by preferencesDataStore("app_preferences")
 
     companion object {
-        val NEXT_ID = intPreferencesKey("next_id")
-        val LAST_ID = intPreferencesKey("last_id")
         val NOTIFICATION_TIME = longPreferencesKey("notification_time")
+        val START_DATE = stringPreferencesKey("start_date")
+        val END_DATE = stringPreferencesKey("end_date")
     }
 
-    suspend fun incrementNextItemId() {
+    /** Save/Get start & end date **/
+
+    suspend fun saveStartDate(startDate: String){
         context.dataStore.edit { preferences ->
-            val id = getNextItemId() + 1
-            preferences[NEXT_ID] = id
+            preferences[START_DATE] = startDate
         }
     }
 
-    suspend fun getNextItemId(): Int {
-        return context.dataStore.data.first()[NEXT_ID] ?: 0
+    suspend fun getStartDate(): String {
+        return context.dataStore.data.first()[START_DATE] ?: Constants.START_DATE
     }
 
-    //TODO: Handle this...
-    suspend fun saveLastItemId(size: Int) {
+    suspend fun saveEndDate(endDate: String){
         context.dataStore.edit { preferences ->
-            preferences[LAST_ID] = size
+            preferences[END_DATE] = endDate
         }
     }
 
-    suspend fun getLastItemId(): Int {
-        return context.dataStore.data.first()[LAST_ID] ?: 0
+    suspend fun getEndDate(): String {
+        return context.dataStore.data.first()[END_DATE] ?: Constants.END_DATE
     }
+
+    /** Notification time **/
 
     suspend fun saveNotificationTime(millis: Long){
         context.dataStore.edit { preferences ->
