@@ -1,23 +1,32 @@
 package com.example.notifyme.feature_notifications.presentation.settings.view_model
 
+import android.app.AlarmManager
 import android.app.Application
+import android.app.PendingIntent
+import android.content.Intent
+import android.os.Build
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.notifyme.feature_notifications.broadcasts.TimerBroadcast
 import com.example.notifyme.feature_notifications.data.local.PrefsManager
+import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 import com.example.notifyme.feature_notifications.domain.use_cases.UseCasesWrapper
 import com.example.notifyme.feature_notifications.presentation.settings.SettingsEvent
 import com.example.notifyme.feature_notifications.util.DataTimeConverter
+import com.example.notifyme.feature_notifications.util.NotificationUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val useCases: UseCasesWrapper,
     private val prefsManager: PrefsManager,
+    private val alarmManager: AlarmManager,
     application: Application
 ) : AndroidViewModel(application) {
 
@@ -31,6 +40,8 @@ class SettingsViewModel @Inject constructor(
 
                     val difference = newNotificationTime - currentNotificationTime
                     useCases.updateDateToAllNotificationsUseCase(difference)
+
+                    NotificationUtil(prefsManager, alarmManager, getApplication(), useCases).prepareNotificationForNextItem()
                 }
             }
             is SettingsEvent.GetNotificationTime -> {

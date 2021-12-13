@@ -27,6 +27,7 @@ import com.example.notifyme.feature_notifications.presentation.notifications.Not
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationState
 import com.example.notifyme.feature_notifications.util.DataTimeConverter
 import com.example.notifyme.feature_notifications.util.DataTimeConverter.getTodayDateMillisFormat
+import com.example.notifyme.feature_notifications.util.NotificationUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +84,7 @@ class NotificationsViewModel @Inject constructor(
 
             withContext(Dispatchers.Default) {
                 //set notification for next item ready
-                sendNotificationOfNextItem()
+                NotificationUtil(prefsManager, alarmManager, getApplication(), useCases).prepareNotificationForNextItem()
             }
         }
     }
@@ -104,7 +105,7 @@ class NotificationsViewModel @Inject constructor(
                 )
             }
             is NotificationEvent.SendNotification -> {
-                sendNotificationNow() //temporary function, for notification testing purpose
+                NotificationUtil(prefsManager, alarmManager, getApplication(), useCases).sendNotificationNow() //temporary function, for notification testing purpose
             }
             is NotificationEvent.OpenSettings -> {
                 Toast.makeText(
@@ -163,85 +164,4 @@ class NotificationsViewModel @Inject constructor(
                 )
             }.launchIn(viewModelScope)
     }
-
-
-    /** Push Notification functions **/
-
-    private fun sendNotificationOfNextItem() {
-        //TODO: Set notification time from prefsManager ->
-//        val notificationTimeLong = prefsManager.getNotificationTime()
-//        val notificationTimeString = DataTimeConverter.convertMillisToTime(notificationTimeLong)
-//        val notificationHours = notificationTimeString.substringBefore(":").toInt()
-//        val notificationMinutes = notificationTimeString.substringAfter(":").toInt()
-//
-//        val calendar = Calendar.getInstance()
-//        calendar.set(Calendar.HOUR_OF_DAY, notificationHours)
-//        calendar.set(Calendar.MINUTE, notificationMinutes)
-//        calendar.set(Calendar.SECOND, 0)
-
-        val calendar = Calendar.getInstance()
-        calendar.set(Calendar.HOUR_OF_DAY, NOTIFICATION_HOURS)
-        calendar.set(Calendar.MINUTE, NOTIFICATION_MINUTES)
-        calendar.set(Calendar.SECOND, 0)
-
-        //if it's already too late, wait for tomorrow :)
-        if (Calendar.getInstance().after(calendar)) {
-            calendar.add(Calendar.DAY_OF_MONTH, 1)
-        }
-
-        viewModelScope.launch {
-            val date: Long = getTodayDateMillisFormat() + prefsManager.getNotificationTime()
-            val notificationItem: NotificationItem = useCases.getNotificationByDateUseCase(date)
-            val title: String = notificationItem.title
-
-            val intent = Intent(getApplication(), TimerBroadcast::class.java).apply {
-                putExtra("nextItemDate", date)
-                putExtra("nextItemTitle", title)
-            }
-            val pendingIntent = PendingIntent.getBroadcast(
-                getApplication(),
-                0,
-                intent,
-                PendingIntent.FLAG_UPDATE_CURRENT
-            )
-
-            alarmManager.setRepeating(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                alarmManager.setExactAndAllowWhileIdle(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    pendingIntent
-                )
-            }
-        }
-    }
-
-    private fun sendNotificationNow() {
-        val myIntent = Intent(getApplication(), TemporaryActivity::class.java)
-        myIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-
-        val pendingIntent = PendingIntent.getActivity(
-            getApplication(),
-            0,
-            myIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
-        val builder = NotificationCompat.Builder(getApplication(), BaseApplication.MY_CHANNEL)
-            .setContentIntent(pendingIntent)
-            .setSmallIcon(R.drawable.ic_baseline_notification_important_24)
-            .setContentTitle("Content title")
-            .setContentText("Content Text")
-            .setPriority(Notification.DEFAULT_SOUND)
-            .setAutoCancel(true)
-
-        val notificationManager = NotificationManagerCompat.from(getApplication())
-        notificationManager.notify(100, builder.build())
-    }
-
 }
