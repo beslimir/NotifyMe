@@ -1,5 +1,7 @@
 package com.example.notifyme.feature_notifications.util
 
+import android.util.Log
+import com.example.notifyme.feature_notifications.util.Constants.TAG
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -80,6 +82,32 @@ object DataTimeConverter {
         val dateString = dateFormat.format(calendar.timeInMillis)
 
         return convertDateToMillis(dateString)
+    }
+
+    fun calculateWeeksFromDateTime(dateTime: String): String {
+        val sdf = SimpleDateFormat("dd.MM.yyyy. HH:mm", Locale.GERMAN)
+        val currentDateAndTime = sdf.format(Date())
+
+        val dateTimeFormat = SimpleDateFormat("dd.MM.yyyy. HH:mm", Locale.GERMAN)
+        val endDate = dateTimeFormat.parse(dateTime)!!
+        val startDate = dateTimeFormat.parse(currentDateAndTime)
+
+        //TODO: Temporary...
+
+        val diff: Long = endDate.time - startDate!!.time
+        val seconds = diff / 1000
+        val minutes = seconds / 60
+        val hours = minutes / 60
+        val days = hours / 24
+        val weeks = days / 7
+
+        val weeks2 = weeks
+        val days2 = days - weeks * 7
+        val hours2 = hours - days * 24
+        val minutes2 = minutes - hours * 60
+        val seconds2 = seconds - minutes * 60
+
+        return "a"
     }
 
 

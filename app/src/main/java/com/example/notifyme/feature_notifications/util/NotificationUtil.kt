@@ -40,8 +40,7 @@ data class NotificationUtil(
             calendar.add(Calendar.DAY_OF_MONTH, 1)
         }
 
-        val date: Long =
-            DataTimeConverter.getTodayDateMillisFormat() + prefsManager.getNotificationTime()
+        val date: Long = DataTimeConverter.getTodayDateMillisFormat() + prefsManager.getNotificationTime()
         val notificationItem: NotificationItem = useCases.getNotificationByDateUseCase(date)
         val title: String = notificationItem.title
 
