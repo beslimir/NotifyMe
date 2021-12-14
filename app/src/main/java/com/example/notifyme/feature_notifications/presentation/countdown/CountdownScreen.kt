@@ -3,6 +3,7 @@ package com.example.notifyme.feature_notifications.presentation.countdown
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
@@ -33,7 +34,7 @@ fun CountdownScreen(
 ) {
     var time by remember { mutableStateOf(context.getString(R.string.click_on_icon)) }
     var date by remember { mutableStateOf(context.getString(R.string.click_on_icon)) }
-    var countdownObjectsList = viewModel.calculateRemainingTime("25.12.2021. 11:00")
+    var countdownObjectsList: List<CountdownDataClass> = viewModel.calculateRemainingTime("25.12.2021. 11:00")
 
     val state = viewModel.state.value
 
@@ -138,6 +139,10 @@ fun CountdownScreen(
                     }
                     Text(text = time)
                 }
+            }
+
+            if (state.isDateSelected && state.isTimeSelected) {
+                countdownObjectsList = viewModel.calculateRemainingTime("$date $time")
             }
 
             Spacer(modifier = Modifier.height(32.dp))
