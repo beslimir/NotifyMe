@@ -41,7 +41,6 @@ import javax.inject.Inject
 class NotificationsViewModel @Inject constructor(
     private val useCases: UseCasesWrapper,
     application: Application,
-    private val alarmManager: AlarmManager,
     private val prefsManager: PrefsManager,
     private val notificationUtil: NotificationUtil
 ) : AndroidViewModel(application) {

@@ -21,4 +21,5 @@
     <string name="descending">Descending</string>
     <string name="notification_not_saved">Couldn\'t save the notification...</string>
     <string name="countdown_text">Enter the date and time of when the event will happen</string>
+    <string name="click_on_icon">Click on icon</string>
 </resources>

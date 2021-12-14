@@ -3,6 +3,7 @@ package com.example.notifyme.feature_notifications.presentation.countdown
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.content.Context
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -17,19 +18,24 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.notifyme.R
-import com.example.notifyme.feature_notifications.presentation.countdown.components.TimerField
+import com.example.notifyme.feature_notifications.presentation.countdown.components.CountdownSection
+import com.example.notifyme.feature_notifications.presentation.countdown.view_model.CountdownViewModel
 import com.example.notifyme.feature_notifications.util.DataTimeConverter
-import com.example.notifyme.feature_notifications.util.DataTimeConverter.calculateWeeksFromDateTime
 import java.util.*
 
+@ExperimentalAnimationApi
 @Composable
 fun CountdownScreen(
-    context: Context
+    context: Context,
+    viewModel: CountdownViewModel = hiltViewModel()
 ) {
-    var time by remember { mutableStateOf("11:00") }
-    var date by remember { mutableStateOf("25.12.2021.") }
-    var remaining = calculateWeeksFromDateTime("25.12.2021. 11:00")
+    var time by remember { mutableStateOf(context.getString(R.string.click_on_icon)) }
+    var date by remember { mutableStateOf(context.getString(R.string.click_on_icon)) }
+    var countdownObjectsList = viewModel.calculateRemainingTime("25.12.2021. 11:00")
+
+    val state = viewModel.state.value
 
     Column(
         modifier = Modifier
@@ -89,6 +95,7 @@ fun CountdownScreen(
                                 context,
                                 DatePickerDialog.OnDateSetListener { view, _year, _month, _day ->
                                     date = "$_day.${_month + 1}.$_year."
+                                    viewModel.onEvent(CountdownEvent.DateSelected)
                                 }, year, month, dayOfMonth
                             )
                             datePickerDialog.show()
@@ -118,6 +125,7 @@ fun CountdownScreen(
                                 TimePickerDialog.OnTimeSetListener { view, hourOfDay, minuteOfHour ->
                                     time =
                                         DataTimeConverter.formatTimeString(hourOfDay, minuteOfHour)
+                                    viewModel.onEvent(CountdownEvent.TimeSelected)
                                 }, hour, minute, true
                             )
                             timePickerDialog.show()
@@ -134,35 +142,15 @@ fun CountdownScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
+            AnimatedVisibility(
+                visible = state.isDateSelected && state.isTimeSelected,
+                enter = fadeIn() + slideInVertically(),
+                exit = fadeOut() + slideOutVertically()
             ) {
-//                Text(text = "Weeks until the event: 20")
-//                Text(text = "Days until the event: ${20 * 7}")
-//                Text(text = "Hours until the event: ${20 * 7 * 24}")
-//                Text(text = "Minutes until the event: ${20 * 7 * 24 * 60}")
-//                Text(text = "Seconds until the event: ${20 * 7 * 24 * 60 * 60}")
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    TimerField(remaining[0])
-                    TimerField(remaining[1])
-                }
-                Spacer(modifier = Modifier.height(32.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-
-                    TimerField(remaining[2])
-                    TimerField(remaining[3])
-                }
+                CountdownSection(countdownObjectsList)
             }
+
+
         }
 
 

@@ -84,7 +84,7 @@ object DataTimeConverter {
         return convertDateToMillis(dateString)
     }
 
-    fun calculateWeeksFromDateTime(dateTime: String): List<CountdownDataClass> {
+    fun calculateRemainingTimeFromDateTime(dateTime: String): List<CountdownDataClass> {
         val sdf = SimpleDateFormat("dd.MM.yyyy. HH:mm", Locale.GERMAN)
         val currentDateAndTime = sdf.format(Date())
 
