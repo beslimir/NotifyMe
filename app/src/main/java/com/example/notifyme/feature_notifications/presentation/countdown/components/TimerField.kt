@@ -13,11 +13,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.notifyme.feature_notifications.presentation.countdown.TimerDataClass
+import com.example.notifyme.feature_notifications.presentation.countdown.CountdownDataClass
 
 @Composable
 fun TimerField(
-    timerDataClass: TimerDataClass
+    timerDataClass: CountdownDataClass
 ) {
     Column(
         modifier = Modifier
