@@ -18,18 +18,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.notifyme.R
-import com.example.notifyme.feature_notifications.presentation.settings.SettingsEvent
+import com.example.notifyme.feature_notifications.presentation.countdown.components.TimerField
 import com.example.notifyme.feature_notifications.util.DataTimeConverter
 import com.example.notifyme.feature_notifications.util.DataTimeConverter.calculateWeeksFromDateTime
 import java.util.*
 
 @Composable
 fun CountdownScreen(
-    context: Context,
+    context: Context
 ) {
     var time by remember { mutableStateOf("11:00") }
     var date by remember { mutableStateOf("25.12.2021.") }
-    calculateWeeksFromDateTime("25.12.2021. 11:00")
+    var remaining = calculateWeeksFromDateTime("25.12.2021. 11:00")
 
     Column(
         modifier = Modifier
@@ -116,7 +116,8 @@ fun CountdownScreen(
                             val timePickerDialog = TimePickerDialog(
                                 context,
                                 TimePickerDialog.OnTimeSetListener { view, hourOfDay, minuteOfHour ->
-                                    time = DataTimeConverter.formatTimeString(hourOfDay, minuteOfHour)
+                                    time =
+                                        DataTimeConverter.formatTimeString(hourOfDay, minuteOfHour)
                                 }, hour, minute, true
                             )
                             timePickerDialog.show()
@@ -137,11 +138,30 @@ fun CountdownScreen(
                 modifier = Modifier
                     .fillMaxSize()
             ) {
-                Text(text = "Weeks until the event: 20")
-                Text(text = "Days until the event: ${20 * 7}")
-                Text(text = "Hours until the event: ${20 * 7 * 24}")
-                Text(text = "Minutes until the event: ${20 * 7 * 24 * 60}")
-                Text(text = "Seconds until the event: ${20 * 7 * 24 * 60 * 60}")
+//                Text(text = "Weeks until the event: 20")
+//                Text(text = "Days until the event: ${20 * 7}")
+//                Text(text = "Hours until the event: ${20 * 7 * 24}")
+//                Text(text = "Minutes until the event: ${20 * 7 * 24 * 60}")
+//                Text(text = "Seconds until the event: ${20 * 7 * 24 * 60 * 60}")
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    TimerField(remaining[0])
+                    TimerField(remaining[1])
+                }
+                Spacer(modifier = Modifier.height(32.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+
+                    TimerField(remaining[2])
+                    TimerField(remaining[3])
+                }
             }
         }
 

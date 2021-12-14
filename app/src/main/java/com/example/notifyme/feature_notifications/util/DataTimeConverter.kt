@@ -1,7 +1,7 @@
 package com.example.notifyme.feature_notifications.util
 
-import android.util.Log
-import com.example.notifyme.feature_notifications.util.Constants.TAG
+import com.example.notifyme.feature_notifications.presentation.countdown.TimerDataClass
+import com.example.notifyme.feature_notifications.presentation.countdown.TimeObjects
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -84,7 +84,7 @@ object DataTimeConverter {
         return convertDateToMillis(dateString)
     }
 
-    fun calculateWeeksFromDateTime(dateTime: String): String {
+    fun calculateWeeksFromDateTime(dateTime: String): List<TimerDataClass> {
         val sdf = SimpleDateFormat("dd.MM.yyyy. HH:mm", Locale.GERMAN)
         val currentDateAndTime = sdf.format(Date())
 
@@ -92,8 +92,7 @@ object DataTimeConverter {
         val endDate = dateTimeFormat.parse(dateTime)!!
         val startDate = dateTimeFormat.parse(currentDateAndTime)
 
-        //TODO: Temporary...
-
+        //display type 1
         val diff: Long = endDate.time - startDate!!.time
         val seconds = diff / 1000
         val minutes = seconds / 60
@@ -101,13 +100,18 @@ object DataTimeConverter {
         val days = hours / 24
         val weeks = days / 7
 
+        //display type 2
         val weeks2 = weeks
         val days2 = days - weeks * 7
         val hours2 = hours - days * 24
         val minutes2 = minutes - hours * 60
-        val seconds2 = seconds - minutes * 60
 
-        return "a"
+        val obj1 = TimerDataClass(TimeObjects.Weeks, weeks2)
+        val obj2 = TimerDataClass(TimeObjects.Days, days2)
+        val obj3 = TimerDataClass(TimeObjects.Hours, hours2)
+        val obj4 = TimerDataClass(TimeObjects.Minutes, minutes2)
+
+        return listOf(obj1, obj2, obj3, obj4)
     }
 
 
