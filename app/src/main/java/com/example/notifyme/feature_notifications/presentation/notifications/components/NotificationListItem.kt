@@ -86,7 +86,7 @@ fun NotificationListItem(
                 overflow = TextOverflow.Ellipsis
             )
         }
-        //TODO: Temorary - just for demo purpose
+
         IconButton(
             onClick = { },
             modifier = Modifier.align(Alignment.BottomEnd)

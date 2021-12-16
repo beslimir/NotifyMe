@@ -1,6 +1,7 @@
 package com.example.notifyme.feature_notifications.presentation.settings
 
 import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -69,17 +70,20 @@ fun SettingsScreen(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                //TODO: Temporary
                 IconButton(
-                    onClick = { }
+                    onClick = {
+                        Toast.makeText(context, context.getString(R.string.settings_icon_1), Toast.LENGTH_SHORT).show()
+                    }
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Android,
-                        contentDescription = "Android"
+                        imageVector = Icons.Default.Info,
+                        contentDescription = "Info"
                     )
                 }
                 IconButton(
-                    onClick = { }
+                    onClick = {
+                        Toast.makeText(context, context.getString(R.string.settings_icon_2), Toast.LENGTH_SHORT).show()
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.School,
