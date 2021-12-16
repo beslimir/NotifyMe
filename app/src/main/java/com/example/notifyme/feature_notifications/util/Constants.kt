@@ -5,4 +5,9 @@ object Constants {
     const val END_DATE = "01.01.2100."
     const val TAG = "beslimir"
     const val ONE_DAY_IN_MILLIS = 86400000
+
+    const val ICON_TYPE_HEART = "heart"
+    const val ICON_TYPE_FIRE = "fire"
+    const val ICON_TYPE_QUESTION = "question_mark"
+    const val ICON_TYPE_FUN = "fun"
 }

@@ -23,6 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.ColorUtils
 import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
+import com.example.notifyme.feature_notifications.util.Constants.ICON_TYPE_FIRE
+import com.example.notifyme.feature_notifications.util.Constants.ICON_TYPE_FUN
+import com.example.notifyme.feature_notifications.util.Constants.ICON_TYPE_HEART
+import com.example.notifyme.feature_notifications.util.Constants.ICON_TYPE_QUESTION
 
 @Composable
 fun NotificationListItem(
@@ -87,15 +91,28 @@ fun NotificationListItem(
             onClick = { },
             modifier = Modifier.align(Alignment.BottomEnd)
         ) {
-            val painter: Painter?
+            var painter: Painter?
+            var drawableResource: Int
             val tint: Color?
-            if (notificationItem.details[0].icon_type == "heart") {
-                painter = painterResource(id = R.drawable.ic_heart)
-                tint = Color.Red.copy(alpha = 0.25f)
-            } else {
-                painter = painterResource(id = R.drawable.ic_fire)
-                tint = Color.DarkGray.copy(alpha = 0.25f)
+            when (notificationItem.details[0].icon_type) {
+                ICON_TYPE_HEART -> {
+                    drawableResource = R.drawable.ic_heart
+                }
+                ICON_TYPE_FIRE -> {
+                    drawableResource = R.drawable.ic_fire
+                }
+                ICON_TYPE_QUESTION -> {
+                    drawableResource = R.drawable.ic_bulb
+                }
+                ICON_TYPE_FUN -> {
+                    drawableResource = R.drawable.ic_smiley
+                }
+                else -> {
+                    drawableResource = R.drawable.ic_flower
+                }
             }
+            painter = painterResource(id = drawableResource)
+            tint = Color.DarkGray.copy(alpha = 0.25f)
             Icon(
                 painter = painter,
                 contentDescription = notificationItem.details[0].icon_type,
