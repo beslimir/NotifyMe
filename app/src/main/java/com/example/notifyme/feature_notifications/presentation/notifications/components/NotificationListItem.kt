@@ -91,8 +91,8 @@ fun NotificationListItem(
             onClick = { },
             modifier = Modifier.align(Alignment.BottomEnd)
         ) {
-            var painter: Painter?
-            var drawableResource: Int
+            val painter: Painter?
+            val drawableResource: Int
             val tint: Color?
             when (notificationItem.details[0].icon_type) {
                 ICON_TYPE_HEART -> {
