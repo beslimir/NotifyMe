@@ -49,7 +49,11 @@ object DataTimeConverter {
         return String.format(
             "%02d:%02d",
             TimeUnit.MILLISECONDS.toHours(millis),
-            TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis))
+            TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(
+                TimeUnit.MILLISECONDS.toHours(
+                    millis
+                )
+            )
         )
     }
 
@@ -82,6 +86,28 @@ object DataTimeConverter {
         val dateString = dateFormat.format(calendar.timeInMillis)
 
         return convertDateToMillis(dateString)
+    }
+
+    fun getTodayDateTimeMillisFormat(): Long {
+        val calendar = Calendar.getInstance(TimeZone.getDefault())
+        val dateFormat = SimpleDateFormat("dd.MM.yyyy. HH:mm", Locale.GERMAN)
+        val dateTimeString = dateFormat.format(calendar.timeInMillis)
+
+        return convertDateTimeToMillis(dateTimeString)
+    }
+
+    private fun convertDateTimeToMillis(date: String): Long {
+        val dateMillisFormat = SimpleDateFormat("dd.MM.yyyy. HH:mm", Locale.GERMAN)
+        try {
+            val mDateTime: Date = dateMillisFormat.parse(date)!!
+            val timeInMillis: Long = mDateTime.time
+
+            return timeInMillis
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+
+        return 0
     }
 
     fun calculateRemainingTimeFromDateTime(dateTime: String): List<CountdownDataClass> {

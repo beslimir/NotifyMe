@@ -15,7 +15,6 @@ interface NotificationDao {
     @Query("SELECT * FROM NotificationItemEntity")
     fun getAllNotifications(): Flow<List<NotificationItemEntity>>
 
-    //TODO: Show notifications until date and hour (if message is not yet arrived via notification)
     @Query("SELECT * FROM NotificationItemEntity WHERE date <= :date")
     suspend fun getAllNotificationsUntilDate(date: Long): List<NotificationItemEntity>
 

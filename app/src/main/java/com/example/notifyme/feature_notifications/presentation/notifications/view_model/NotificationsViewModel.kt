@@ -1,6 +1,5 @@
 package com.example.notifyme.feature_notifications.presentation.notifications.view_model
 
-import android.app.AlarmManager
 import android.app.Application
 import android.util.Log
 import android.widget.Toast
@@ -157,9 +156,9 @@ class NotificationsViewModel @Inject constructor(
     }
 
     private fun getAllNotifications(orderType: OrderType) {
+        val untilDate = DataTimeConverter.getTodayDateTimeMillisFormat()
         getNotificationsJob?.cancel()
-        getNotificationsJob =
-            useCases.getAllNotificationsUseCase(orderType).onEach { notifications ->
+        getNotificationsJob = useCases.getAllNotificationsUntilDateUseCase(orderType, untilDate).onEach { notifications ->
                 _state.value = state.value.copy(
                     notifications = notifications,
                     orderType = orderType
