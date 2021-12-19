@@ -9,15 +9,16 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.notifyme.BaseApplication.Companion.MY_CHANNEL
 import com.example.notifyme.R
-import com.example.notifyme.feature_notifications.presentation.TemporaryActivity
+
+import com.example.notifyme.feature_notifications.presentation.MainActivity
 
 class TimerBroadcast: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val date: Long? = intent?.getLongExtra("nextItemDate", 1)
-        val title: String? = intent?.getStringExtra("nextItemTitle")
+        val date: Long? = intent?.getLongExtra("notificationDate", 1)
+        val title: String? = intent?.getStringExtra("notificationTitle")
 
-        val myIntent = Intent(context, TemporaryActivity::class.java)
+        val myIntent = Intent(context, MainActivity::class.java)
         myIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
         val pendingIntent = PendingIntent.getActivity(context, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT)

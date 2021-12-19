@@ -45,8 +45,8 @@ data class NotificationUtil(
         val title: String = notificationItem.title
 
         val intent = Intent(application, TimerBroadcast::class.java).apply {
-            putExtra("nextItemDate", date)
-            putExtra("nextItemTitle", title)
+            putExtra("notificationDate", date)
+            putExtra("notificationTitle", title)
         }
         val pendingIntent = PendingIntent.getBroadcast(
             application,
