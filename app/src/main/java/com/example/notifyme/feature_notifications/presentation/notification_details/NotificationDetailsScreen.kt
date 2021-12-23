@@ -129,7 +129,6 @@ fun NotificationDetailsScreen(
             Spacer(modifier = Modifier.height(16.dp))
             TransparentTextField(
                 text = titleState,
-                singleLine = true,
                 textStyle = MaterialTheme.typography.h5
             )
             Spacer(modifier = Modifier.height(16.dp))
