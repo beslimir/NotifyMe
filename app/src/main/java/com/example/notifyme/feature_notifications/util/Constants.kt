@@ -10,4 +10,8 @@ object Constants {
     const val ICON_TYPE_FIRE = "fire"
     const val ICON_TYPE_QUESTION = "question_mark"
     const val ICON_TYPE_FUN = "fun"
+
+    const val SCHATZ_FLAVOR = "SchatzFlavor"
+    const val DEFAULT_FLAVOR = "DefaultFlavor"
+    const val POBRO_FLAVOR = "PobroFlavor"
 }

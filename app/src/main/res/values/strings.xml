@@ -16,7 +16,7 @@
     <string name="statement_text_accepted">Statement accepted!</string>
     <string name="statement_text_full_revealed">Full text revealed</string>
     <string name="settings">Settings</string>
-    <string name="notify_me">Notify me</string>
+    <string name="app_header">Notify me</string>
     <string name="ascending">Ascending</string>
     <string name="descending">Descending</string>
     <string name="notification_not_saved">Couldn\'t save the notification...</string>

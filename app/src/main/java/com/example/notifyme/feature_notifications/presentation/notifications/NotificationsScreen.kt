@@ -18,11 +18,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.notifyme.BuildConfig
 import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.presentation.Screen
 import com.example.notifyme.feature_notifications.presentation.notifications.components.NotificationListItem
 import com.example.notifyme.feature_notifications.presentation.notifications.components.OrderSection
 import com.example.notifyme.feature_notifications.presentation.notifications.view_model.NotificationsViewModel
+import com.example.notifyme.feature_notifications.util.Constants.SCHATZ_FLAVOR
 
 @ExperimentalAnimationApi
 @Composable
@@ -36,16 +38,18 @@ fun NotificationsScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.onEvent(NotificationEvent.SendNotification)
-                },
-                backgroundColor = MaterialTheme.colors.primary
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Doorbell,
-                    contentDescription = "Notify me!"
-                )
+            if (BuildConfig.FLAVOR != SCHATZ_FLAVOR) {
+                FloatingActionButton(
+                    onClick = {
+                        viewModel.onEvent(NotificationEvent.SendNotification)
+                    },
+                    backgroundColor = MaterialTheme.colors.primary,
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Doorbell,
+                        contentDescription = "Notify me!",
+                    )
+                }
             }
         },
         scaffoldState = scaffoldState
@@ -61,7 +65,7 @@ fun NotificationsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(R.string.notify_me),
+                    text = stringResource(R.string.app_header),
                     style = MaterialTheme.typography.h6
                 )
                 Row(

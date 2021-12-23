@@ -74,7 +74,7 @@ fun StatementScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .weight(6f),
+                    .weight(4f),
                 contentAlignment = Alignment.Center
             ) {
                 Column(

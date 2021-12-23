@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -29,7 +30,7 @@ class TimerBroadcast : BroadcastReceiver() {
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_heart_shape)
             .setColor(Color.RED)
-//            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.img))
+            .setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.notification_large_picture))
             .setStyle(
                 NotificationCompat.BigTextStyle()
                     .setSummaryText(context.resources.getString(R.string.notification_summary_text))
