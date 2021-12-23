@@ -43,10 +43,11 @@ data class NotificationUtil(
         val date: Long = DataTimeConverter.getTodayDateMillisFormat() + prefsManager.getNotificationTime()
         val notificationItem: NotificationItem = useCases.getNotificationByDateUseCase(date)
         val title: String = notificationItem.title
+        val content: String = notificationItem.content
 
         val intent = Intent(application, TimerBroadcast::class.java).apply {
-            putExtra("notificationDate", date)
             putExtra("notificationTitle", title)
+            putExtra("notificationContent", content)
         }
         val pendingIntent = PendingIntent.getBroadcast(
             application,

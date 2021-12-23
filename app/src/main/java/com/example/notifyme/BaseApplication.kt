@@ -3,6 +3,7 @@ package com.example.notifyme
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.graphics.Color
 import android.os.Build
 import com.facebook.stetho.Stetho
 import dagger.hilt.android.HiltAndroidApp
@@ -30,6 +31,10 @@ class BaseApplication: Application() {
                 NotificationManager.IMPORTANCE_HIGH
             )
             channel.description = "This is the NotifyMe channel"
+            channel.enableLights(true)
+            channel.lightColor = Color.BLUE
+            channel.enableVibration(true)
+            channel.vibrationPattern = longArrayOf(100, 200, 100, 200)
 
             val notificationManager: NotificationManager = getSystemService(NotificationManager::class.java)
             notificationManager.createNotificationChannel(channel)

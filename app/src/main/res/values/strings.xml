@@ -24,4 +24,5 @@
     <string name="click_on_icon">Click on icon</string>
     <string name="settings_icon_1">Hello, this is just for info</string>
     <string name="settings_icon_2">Hello, this is just for school</string>
+    <string name="notification_summary_text">Summary text</string>
 </resources>
