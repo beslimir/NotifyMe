@@ -63,7 +63,7 @@ class MainActivity : ComponentActivity() {
                             StatementScreen(context = this@MainActivity)
                         }
                         composable(route = Screen.CreditsScreen.route) {
-                            CreditsScreen()
+                            CreditsScreen(context = this@MainActivity)
                         }
                         composable(route = Screen.CountdownScreen.route) {
                             CountdownScreen(context = this@MainActivity)

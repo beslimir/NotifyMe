@@ -9,6 +9,14 @@
     <string name="settings_item_1">Time management</string>
     <string name="settings_item_1_description">Set at what time you want the notifications to appear</string>
     <string name="credits_text">beslimir is the creator of the app.\nThe app is made for fun and serves as a daily notifier with some dedicated quotes.\n\nFirst notification will arrive on: %1$s\nLast notification will arrive on: %2$s</string>
+
+    <string name="credits_icons_1">All icons in the app are self made.</string>
+    <string name="credits_icons_creator"></string>
+    <string name="credits_icons_creator_link"></string>
+    <string name="credits_icons_2"></string>
+    <string name="credits_icons_page"></string>
+    <string name="credits_icons_page_link"></string>
+
     <string name="statement_text_1" tools:ignore="TypographyEllipsis">With this statement, I confess that...</string>
     <string name="statement_text_2">With this statement, I confess that FC Bayern beat Barcelona last night 3:0!</string>
     <string name="statement_text_click_reveal">Click to reveal the full text</string>

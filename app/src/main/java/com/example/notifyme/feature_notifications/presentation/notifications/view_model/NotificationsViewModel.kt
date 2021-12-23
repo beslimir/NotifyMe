@@ -8,6 +8,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.notifyme.BuildConfig
 import com.example.notifyme.feature_notifications.data.local.NotificationItemEntity
 import com.example.notifyme.feature_notifications.data.local.PrefsManager
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
@@ -23,9 +24,12 @@ import com.example.notifyme.feature_notifications.util.DataTimeConverter.convert
 import com.example.notifyme.feature_notifications.util.NotificationUtil
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.InputStream
@@ -55,8 +59,13 @@ class NotificationsViewModel @Inject constructor(
             //if start date == 01.01.1900., that means the app is never opened before
             if (prefsManager.getStartDate() == Constants.START_DATE) {
                 //get all data from local json file
-                val myJson =
-                    getJsonFromLocalFile(getApplication<Application>().assets.open("notify_me_msg.json"))
+                var jsonFile: String?
+                if (BuildConfig.FLAVOR == "SchatzFlavor") {
+                    jsonFile = "notify_me_msg_schatz.json"
+                } else {
+                    jsonFile = "notify_me_msg_default.json"
+                }
+                val myJson = getJsonFromLocalFile(getApplication<Application>().assets.open(jsonFile))
                 //save retrieved data to Room db and DataStore
                 saveRetrievedDataToRoomDb(myJson)
 
@@ -155,7 +164,8 @@ class NotificationsViewModel @Inject constructor(
     private fun getAllNotifications(orderType: OrderType) {
         val untilDate = DataTimeConverter.getTodayDateTimeMillisFormat()
         getNotificationsJob?.cancel()
-        getNotificationsJob = useCases.getAllNotificationsUntilDateUseCase(orderType, untilDate).onEach { notifications ->
+        getNotificationsJob = useCases.getAllNotificationsUntilDateUseCase(orderType, untilDate)
+            .onEach { notifications ->
                 _state.value = state.value.copy(
                     notifications = notifications,
                     orderType = orderType
