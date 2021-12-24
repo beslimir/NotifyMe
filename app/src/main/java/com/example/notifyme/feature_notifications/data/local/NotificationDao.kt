@@ -16,7 +16,7 @@ interface NotificationDao {
     fun getAllNotifications(): Flow<List<NotificationItemEntity>>
 
     @Query("SELECT * FROM NotificationItemEntity WHERE date <= :date")
-    suspend fun getAllNotificationsUntilDate(date: Long): List<NotificationItemEntity>
+    fun getAllNotificationsUntilDate(date: Long): Flow<List<NotificationItemEntity>>
 
     @Query("SELECT * FROM NotificationItemEntity WHERE id = :id")
     suspend fun getNotificationById(id: Int): NotificationItemEntity

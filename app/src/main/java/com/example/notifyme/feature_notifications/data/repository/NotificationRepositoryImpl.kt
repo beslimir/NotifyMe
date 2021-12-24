@@ -32,11 +32,14 @@ class NotificationRepositoryImpl(
         return notifications
     }
 
-    override fun getAllNotificationsUntilDate(date: Long): Flow<List<NotificationItem>> = flow {
-        val notifications = notificationDao.getAllNotificationsUntilDate(date).map {
-            it.toNotificationItem()
+    override fun getAllNotificationsUntilDate(date: Long): Flow<List<NotificationItem>> {
+        val notifications = notificationDao.getAllNotificationsUntilDate(date).map { list ->
+            list.map { entity ->
+                entity.toNotificationItem()
+            }
         }
-        emit(notifications)
+
+        return notifications
     }
 
     override suspend fun getNotificationById(id: Int): NotificationItem =
