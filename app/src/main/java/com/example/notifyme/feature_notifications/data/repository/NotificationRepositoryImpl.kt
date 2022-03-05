@@ -6,9 +6,7 @@ import com.example.notifyme.feature_notifications.data.local.NotificationItemEnt
 import com.example.notifyme.feature_notifications.domain.model.NotificationDetails
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 import com.example.notifyme.feature_notifications.domain.repository.NotificationRepository
-import com.example.notifyme.feature_notifications.util.NotificationUtil
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import java.lang.NullPointerException
 

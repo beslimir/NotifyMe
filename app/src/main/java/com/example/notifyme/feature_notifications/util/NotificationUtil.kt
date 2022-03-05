@@ -1,5 +1,6 @@
 package com.example.notifyme.feature_notifications.util
 
+import android.annotation.SuppressLint
 import android.app.AlarmManager
 import android.app.Application
 import android.app.Notification
@@ -21,9 +22,10 @@ data class NotificationUtil(
     private val prefsManager: PrefsManager,
     private val alarmManager: AlarmManager,
     private val application: Application,
-    private val useCases: UseCasesWrapper
+    private val useCases: UseCasesWrapper,
 ) {
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     suspend fun prepareNotificationForNextItem() {
         val notificationTimeLong = prefsManager.getNotificationTime()
         val notificationTimeString = DataTimeConverter.convertMillisToTime(notificationTimeLong)
@@ -49,12 +51,21 @@ data class NotificationUtil(
             putExtra("notificationTitle", title)
             putExtra("notificationContent", content)
         }
-        val pendingIntent = PendingIntent.getBroadcast(
-            application,
-            0,
-            intent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(
+                application,
+                0,
+                intent,
+                PendingIntent.FLAG_MUTABLE
+            )
+        } else {
+            PendingIntent.getBroadcast(
+                application,
+                0,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
 
         alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
@@ -62,28 +73,30 @@ data class NotificationUtil(
             AlarmManager.INTERVAL_DAY,
             pendingIntent
         )
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            alarmManager.setExactAndAllowWhileIdle(
-                AlarmManager.RTC_WAKEUP,
-                calendar.timeInMillis,
-                pendingIntent
-            )
-        }
     }
 
     /** Push Notification functions **/
 
+    @SuppressLint("UnspecifiedImmutableFlag")
     fun sendNotificationNow() {
         val myIntent = Intent(application, TemporaryActivity::class.java)
         myIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-        val pendingIntent = PendingIntent.getActivity(
-            application,
-            0,
-            myIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT
-        )
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            PendingIntent.getBroadcast(
+                application,
+                0,
+                myIntent,
+                PendingIntent.FLAG_MUTABLE
+            )
+        } else {
+            PendingIntent.getBroadcast(
+                application,
+                0,
+                myIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT
+            )
+        }
         val builder = NotificationCompat.Builder(application, BaseApplication.MY_CHANNEL)
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_baseline_notification_important_24)

@@ -59,11 +59,10 @@ class NotificationsViewModel @Inject constructor(
             //if start date == 01.01.1900., that means the app is never opened before
             if (prefsManager.getStartDate() == Constants.START_DATE) {
                 //get all data from local json file
-                var jsonFile: String?
-                if (BuildConfig.FLAVOR == "SchatzFlavor") {
-                    jsonFile = "notify_me_msg_schatz.json"
+                val jsonFile = if (BuildConfig.FLAVOR == "SchatzFlavor") {
+                    "notify_me_msg_schatz.json"
                 } else {
-                    jsonFile = "notify_me_msg_default.json"
+                    "notify_me_msg_default.json"
                 }
                 val myJson = getJsonFromLocalFile(getApplication<Application>().assets.open(jsonFile))
                 //save retrieved data to Room db and DataStore

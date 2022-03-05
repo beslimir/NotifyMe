@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.notifyme.BaseApplication.Companion.MY_CHANNEL
@@ -24,8 +25,11 @@ class TimerBroadcast : BroadcastReceiver() {
         val myIntent = Intent(context, MainActivity::class.java)
         myIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
 
-        val pendingIntent =
-            PendingIntent.getActivity(context, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                PendingIntent.getActivity(context, 0, myIntent, PendingIntent.FLAG_MUTABLE)
+            } else {
+                PendingIntent.getActivity(context, 0, myIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            }
         val builder = NotificationCompat.Builder(context!!, MY_CHANNEL)
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_heart_shape)
