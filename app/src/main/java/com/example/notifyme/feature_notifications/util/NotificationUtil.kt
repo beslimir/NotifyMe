@@ -7,6 +7,7 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.notifyme.BaseApplication
@@ -67,12 +68,19 @@ data class NotificationUtil(
             )
         }
 
-        alarmManager.setRepeating(
+//        alarmManager.setRepeating(
+//            AlarmManager.RTC_WAKEUP,
+//            calendar.timeInMillis,
+//            AlarmManager.INTERVAL_DAY,
+//            pendingIntent
+//        )
+        alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
-            AlarmManager.INTERVAL_DAY,
             pendingIntent
         )
+
+        Log.d("MyNotifications", "Next notification prepared: $title on $date")
     }
 
     /** Push Notification functions **/

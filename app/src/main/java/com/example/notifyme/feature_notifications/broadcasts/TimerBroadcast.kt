@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.notifyme.BaseApplication.Companion.MY_CHANNEL
@@ -21,6 +22,8 @@ class TimerBroadcast : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         val title: String? = intent?.getStringExtra("notificationTitle")
         val content: String? = intent?.getStringExtra("notificationContent")
+
+        Log.d("MyNotifications", "onReceive: Notification $title received!")
 
         val myIntent = Intent(context, MainActivity::class.java)
         myIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
