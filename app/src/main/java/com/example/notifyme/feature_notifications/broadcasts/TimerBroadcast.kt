@@ -46,6 +46,7 @@ class TimerBroadcast : BroadcastReceiver() {
             .setContentText("$content")
             .setPriority(Notification.DEFAULT_SOUND)
             .setAutoCancel(true)
+            .setOngoing(true)
 
         val notificationManager = NotificationManagerCompat.from(context)
         notificationManager.notify(100, builder.build())

@@ -80,7 +80,7 @@ data class NotificationUtil(
             pendingIntent
         )
 
-        Log.d("MyNotifications", "Next notification prepared: $title on $date")
+        Log.d("MyNotifications", "Next notification prepared: $title on $date\n${calendar.timeInMillis}")
     }
 
     /** Push Notification functions **/
