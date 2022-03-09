@@ -76,6 +76,7 @@ class NotificationsViewModel @Inject constructor(
                 getAllNotifications(OrderType.Ascending)
             }
 
+            //TODO: if notification already set for the next day, skip this...
             withContext(Dispatchers.Default) {
                 //set notification for next item ready
                 notificationUtil.prepareNotificationForNextItem()
