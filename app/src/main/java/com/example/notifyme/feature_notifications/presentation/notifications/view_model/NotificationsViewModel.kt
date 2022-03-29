@@ -75,8 +75,7 @@ class NotificationsViewModel @Inject constructor(
                 //show all notifications from Room database in app list
                 getAllNotifications(OrderType.Ascending)
             }
-
-            //TODO: if notification already set for the next day, skip this...
+            
             withContext(Dispatchers.Default) {
                 //set notification for next item ready
                 notificationUtil.prepareNotificationForNextItem()
