@@ -17,6 +17,7 @@ import com.example.notifyme.feature_notifications.data.local.PrefsManager
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
 import com.example.notifyme.feature_notifications.domain.use_cases.UseCasesWrapper
 import com.example.notifyme.feature_notifications.presentation.TemporaryActivity
+import com.example.notifyme.feature_notifications.util.Constants.ONE_DAY_IN_MILLIS
 import java.util.*
 
 data class NotificationUtil(
@@ -38,12 +39,14 @@ data class NotificationUtil(
         calendar.set(Calendar.MINUTE, notificationMinutes)
         calendar.set(Calendar.SECOND, 0)
 
+        var date: Long = DataTimeConverter.getTodayDateMillisFormat() + prefsManager.getNotificationTime()
+
         //if it's already too late, wait for tomorrow :)
         if (Calendar.getInstance().after(calendar)) {
             calendar.add(Calendar.DAY_OF_MONTH, 1)
+            date += ONE_DAY_IN_MILLIS
         }
 
-        val date: Long = DataTimeConverter.getTodayDateMillisFormat() + prefsManager.getNotificationTime()
         val notificationItem: NotificationItem = useCases.getNotificationByDateUseCase(date)
         val title: String = notificationItem.title
         val content: String = notificationItem.content
@@ -57,7 +60,7 @@ data class NotificationUtil(
                 application,
                 0,
                 intent,
-                PendingIntent.FLAG_MUTABLE
+                PendingIntent.FLAG_MUTABLE or PendingIntent.FLAG_UPDATE_CURRENT
             )
         } else {
             PendingIntent.getBroadcast(
@@ -74,6 +77,7 @@ data class NotificationUtil(
 //            AlarmManager.INTERVAL_DAY,
 //            pendingIntent
 //        )
+
         alarmManager.setExactAndAllowWhileIdle(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
