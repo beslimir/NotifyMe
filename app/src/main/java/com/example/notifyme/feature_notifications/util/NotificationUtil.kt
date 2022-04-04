@@ -78,11 +78,14 @@ data class NotificationUtil(
 //            pendingIntent
 //        )
 
-        alarmManager.setExactAndAllowWhileIdle(
-            AlarmManager.RTC_WAKEUP,
-            calendar.timeInMillis,
-            pendingIntent
-        )
+//        alarmManager.setExactAndAllowWhileIdle(
+//            AlarmManager.RTC_WAKEUP,
+//            calendar.timeInMillis,
+//            pendingIntent
+//        )
+
+        val alarmClockInfo: AlarmManager.AlarmClockInfo = AlarmManager.AlarmClockInfo(calendar.timeInMillis, pendingIntent)
+        alarmManager.setAlarmClock(alarmClockInfo, pendingIntent)
 
         Log.d("MyNotifications", "Next notification prepared: $title on $date\n${calendar.timeInMillis}")
     }
