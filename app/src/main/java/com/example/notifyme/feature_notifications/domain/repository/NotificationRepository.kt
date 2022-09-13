@@ -1,6 +1,7 @@
 package com.example.notifyme.feature_notifications.domain.repository
 
 import com.example.notifyme.feature_notifications.domain.model.NotificationItem
+import com.google.gson.JsonObject
 import kotlinx.coroutines.flow.Flow
 
 interface NotificationRepository {
@@ -12,5 +13,7 @@ interface NotificationRepository {
     suspend fun insertNotification(notificationItem: NotificationItem)
     suspend fun updateDateToAllNotifications(date: Long)
     suspend fun deleteNotification(notificationItem: NotificationItem)
+
+    suspend fun getFirebaseJson(): JsonObject
 
 }

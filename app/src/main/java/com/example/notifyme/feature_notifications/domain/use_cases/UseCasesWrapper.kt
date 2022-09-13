@@ -7,5 +7,6 @@ data class UseCasesWrapper(
     val getNotificationByDateUseCase: GetNotificationByDateUseCase,
     val insertNotificationUseCase: InsertNotificationUseCase,
     val updateDateToAllNotificationsUseCase: UpdateDateToAllNotificationsUseCase,
-    val deleteNotificationUseCase: DeleteNotificationUseCase
+    val deleteNotificationUseCase: DeleteNotificationUseCase,
+    val getJsonFromFirebaseUseCase: GetJsonFromFirebaseUseCase
 )

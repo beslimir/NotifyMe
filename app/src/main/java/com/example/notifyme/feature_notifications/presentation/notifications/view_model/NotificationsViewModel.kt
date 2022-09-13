@@ -42,7 +42,7 @@ class NotificationsViewModel @Inject constructor(
     private val useCases: UseCasesWrapper,
     application: Application,
     private val prefsManager: PrefsManager,
-    private val notificationUtil: NotificationUtil
+    private val notificationUtil: NotificationUtil,
 ) : AndroidViewModel(application) {
 
     private val _state = mutableStateOf(NotificationState())
@@ -64,9 +64,13 @@ class NotificationsViewModel @Inject constructor(
                 } else {
                     "notify_me_msg_default.json"
                 }
-                val myJson = getJsonFromLocalFile(getApplication<Application>().assets.open(jsonFile))
+
+                /** Using firebase storage: comment the local file **/
+//                val myJson = getJsonFromLocalFile(getApplication<Application>().assets.open(jsonFile))
+//                val myJson = readJsonFromFirebase()
+                val myJson = useCases.getJsonFromFirebaseUseCase()
                 //save retrieved data to Room db and DataStore
-                saveRetrievedDataToRoomDb(myJson)
+                saveRetrievedDataToRoomDb(myJson.toString())
 
                 Log.d(TAG, "checkStatus: First app opening")
             }
@@ -75,7 +79,7 @@ class NotificationsViewModel @Inject constructor(
                 //show all notifications from Room database in app list
                 getAllNotifications(OrderType.Ascending)
             }
-            
+
             withContext(Dispatchers.Default) {
                 //set notification for next item ready
                 notificationUtil.prepareNotificationForNextItem()
@@ -113,10 +117,13 @@ class NotificationsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * This function was used for local files. I will try to use files from the server.
+     * **/
     private fun getJsonFromLocalFile(inputStream: InputStream): String {
-        var json: String? = null
+        var json: String? = ""
 
-        var bytes = ByteArray(inputStream.available())
+        val bytes = ByteArray(inputStream.available())
         inputStream.read(bytes, 0, bytes.size)
         json = String(bytes)
 
