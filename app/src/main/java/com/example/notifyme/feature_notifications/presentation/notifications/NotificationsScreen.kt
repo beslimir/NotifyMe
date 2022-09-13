@@ -12,12 +12,14 @@ import androidx.compose.material.icons.filled.Doorbell
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.airbnb.lottie.compose.*
 import com.example.notifyme.BuildConfig
 import com.example.notifyme.R
 import com.example.notifyme.feature_notifications.presentation.Screen
@@ -31,10 +33,16 @@ import com.example.notifyme.feature_notifications.util.Constants.SCHATZ_FLAVOR
 fun NotificationsScreen(
     navController: NavController,
     context: Context,
-    viewModel: NotificationsViewModel = hiltViewModel()
+    viewModel: NotificationsViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.value
     val scaffoldState = rememberScaffoldState()
+
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.waiting_for_data))
+    val progress by animateLottieCompositionAsState(
+        composition = composition,
+        iterations = LottieConstants.IterateForever
+    )
 
     Scaffold(
         floatingActionButton = {
@@ -111,20 +119,34 @@ fun NotificationsScreen(
                 )
             }
             Spacer(modifier = Modifier.height(16.dp))
-            LazyColumn(modifier = Modifier.fillMaxSize()) {
-                items(state.notifications) { notificationItem ->
-                    NotificationListItem(
-                        notificationItem = notificationItem,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable {
-                                navController.navigate(
-                                    Screen.NotificationDetailsScreen.route +
-                                            "?notificationId=${notificationItem.id}&notificationColor=${notificationItem.color}"
-                                )
-                            }
+
+            if (state.notifications.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    LottieAnimation(
+                        composition = composition,
+                        progress = { progress }
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                }
+            } else {
+                LazyColumn(modifier = Modifier.fillMaxSize()) {
+                    items(state.notifications) { notificationItem ->
+                        NotificationListItem(
+                            notificationItem = notificationItem,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    navController.navigate(
+                                        Screen.NotificationDetailsScreen.route +
+                                                "?notificationId=${notificationItem.id}&notificationColor=${notificationItem.color}"
+                                    )
+                                }
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                    }
                 }
             }
         }

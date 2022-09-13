@@ -132,6 +132,9 @@ dependencies {
     //Stetho
     implementation "com.facebook.stetho:stetho:$stetho_v"
 
+    //Lottie library
+    implementation "com.airbnb.android:lottie-compose:5.2.0"
+
     // Import the Firebase BoM
     // When using the BoM, you don't specify versions in Firebase library dependencies
     implementation platform('com.google.firebase:firebase-bom:30.4.1')
