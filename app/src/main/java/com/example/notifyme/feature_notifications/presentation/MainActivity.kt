@@ -13,12 +13,11 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.notifyme.feature_notifications.presentation.countdown.CountdownScreen
 import com.example.notifyme.feature_notifications.presentation.credits.CreditsScreen
-import com.example.notifyme.feature_notifications.presentation.ui.theme.NotifyMeAppTheme
 import com.example.notifyme.feature_notifications.presentation.notification_details.NotificationDetailsScreen
 import com.example.notifyme.feature_notifications.presentation.notifications.NotificationsScreen
 import com.example.notifyme.feature_notifications.presentation.settings.SettingsScreen
 import com.example.notifyme.feature_notifications.presentation.statement.StatementScreen
-
+import com.example.notifyme.feature_notifications.presentation.ui.theme.NotifyMeAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,13 +28,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             NotifyMeAppTheme {
                 Surface(color = MaterialTheme.colors.background) {
+
+                    var isOpenedFromNotification = false
+                    if (intent.extras != null) {
+                        val b: Bundle = intent.extras!!
+                        isOpenedFromNotification = b.getBoolean("fromNotification")
+                    }
+
                     val navController = rememberNavController()
                     NavHost(
                         navController = navController,
                         startDestination = Screen.NotificationsScreen.route
                     ) {
                         composable(route = Screen.NotificationsScreen.route) {
-                            NotificationsScreen(navController = navController, this@MainActivity)
+                            NotificationsScreen(
+                                navController = navController,
+                                isOpenedFromNotification = isOpenedFromNotification
+                            )
                         }
                         composable(route = Screen.NotificationDetailsScreen.route +
                                 "?notificationId={notificationId}&notificationColor={notificationColor}",
@@ -57,7 +66,8 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(route = Screen.SettingsScreen.route) {
-                            SettingsScreen(navController = navController, context = this@MainActivity)
+                            SettingsScreen(navController = navController,
+                                context = this@MainActivity)
                         }
                         composable(route = Screen.StatementScreen.route) {
                             StatementScreen(context = this@MainActivity)

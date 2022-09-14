@@ -27,6 +27,7 @@ class TimerBroadcast : BroadcastReceiver() {
 
         val myIntent = Intent(context, MainActivity::class.java)
         myIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+        myIntent.putExtra("fromNotification", true)
 
         val pendingIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 PendingIntent.getActivity(context, 0, myIntent, PendingIntent.FLAG_MUTABLE)

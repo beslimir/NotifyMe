@@ -21,6 +21,7 @@ class PrefsManager(
         val START_DATE = stringPreferencesKey("start_date")
         val END_DATE = stringPreferencesKey("end_date")
         val STATEMENT_ACCEPTED = booleanPreferencesKey("statement_accepted")
+        val JSON_AS_STRING = stringPreferencesKey("json_as_string")
     }
 
     /** Save/Get start & end date **/
@@ -67,6 +68,18 @@ class PrefsManager(
 
     suspend fun getStatement(): Boolean {
         return context.dataStore.data.first()[STATEMENT_ACCEPTED] ?: false
+    }
+
+    /** Json as string **/
+
+    suspend fun saveJson(json: String) {
+        context.dataStore.edit { preferences ->
+            preferences[JSON_AS_STRING] = json
+        }
+    }
+
+    suspend fun getJson(): String {
+        return context.dataStore.data.first()[JSON_AS_STRING] ?: ""
     }
 
 //    //not returning new value after exit of app (back button) and returning

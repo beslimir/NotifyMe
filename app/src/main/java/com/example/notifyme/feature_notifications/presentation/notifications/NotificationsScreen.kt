@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.Doorbell
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Sort
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -32,7 +33,7 @@ import com.example.notifyme.feature_notifications.util.Constants.SCHATZ_FLAVOR
 @Composable
 fun NotificationsScreen(
     navController: NavController,
-    context: Context,
+    isOpenedFromNotification: Boolean,
     viewModel: NotificationsViewModel = hiltViewModel(),
 ) {
     val state = viewModel.state.value
@@ -43,6 +44,12 @@ fun NotificationsScreen(
         composition = composition,
         iterations = LottieConstants.IterateForever
     )
+
+    LaunchedEffect(true) {
+        if (isOpenedFromNotification) {
+            viewModel.checkJsonFromFirebase()
+        }
+    }
 
     Scaffold(
         floatingActionButton = {

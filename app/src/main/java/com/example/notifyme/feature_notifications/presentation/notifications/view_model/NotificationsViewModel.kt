@@ -89,6 +89,16 @@ class NotificationsViewModel @Inject constructor(
         }
     }
 
+    fun checkJsonFromFirebase() {
+        viewModelScope.launch {
+            val myJson = useCases.getJsonFromFirebaseUseCase().toString()
+            val lastJson = prefsManager.getJson()
+            if (myJson != lastJson) {
+                //TODO: update the db (just with new data - past data don't change)
+            }
+        }
+    }
+
     fun onEvent(event: NotificationEvent) {
         when (event) {
             is NotificationEvent.Order -> {
@@ -165,6 +175,8 @@ class NotificationsViewModel @Inject constructor(
                 notificationItem
             )
         }
+
+        prefsManager.saveJson(myJson)
     }
 
     private fun getAllNotifications(orderType: OrderType) {
