@@ -89,12 +89,56 @@ class NotificationsViewModel @Inject constructor(
         }
     }
 
+    /**
+     * Because the data can be updated in the firebase (add new data on top of the old, change the
+     * title or content, icon type, etc.), the db must be updated.
+     * The data in the Firebase should not be deleted, just modify the mentioned parameters or
+     * add new data on top.
+     * **/
+
     fun checkJsonFromFirebase() {
         viewModelScope.launch {
-            val myJson = useCases.getJsonFromFirebaseUseCase().toString()
+            val newJson = useCases.getJsonFromFirebaseUseCase().toString()
             val lastJson = prefsManager.getJson()
-            if (myJson != lastJson) {
-                //TODO: update the db (just with new data - past data don't change)
+            if (newJson != lastJson) {
+                val reader = JSONObject(newJson)
+                val lastReader = JSONObject(lastJson)
+                val finalJson: JSONArray = reader.getJSONArray("final_json")
+                val lastFinalJson: JSONArray = lastReader.getJSONArray("final_json")
+                lateinit var notificationItem: NotificationItem
+                var counterForNewDate = 1 //for entering new dates of new notification items
+
+                for (i in 0 until finalJson.length()) {
+                    notificationItem = Gson().fromJson(
+                        finalJson[i].toString(),
+                        NotificationItem::class.java
+                    ).also {
+                        if (lastFinalJson.length() >= i + 1) {
+                            //enter old date and color (the user already saw the color, and the date remains the same)
+                            val currentNotificationItem = useCases.getNotificationByIdUseCase(i + 1)
+                            it.date = currentNotificationItem.date
+                            it.color = currentNotificationItem.color
+                        } else {
+                            //enter new dates (old + 24h) and new colors as the user didn't see the old
+                            it.date = useCases.getNotificationByIdUseCase(lastFinalJson.length()).date + ONE_DAY_IN_MILLIS * counterForNewDate
+                            it.color = NotificationItemEntity.notificationItemColors.random().toArgb()
+                            counterForNewDate++
+                        }
+
+                        //save last date to DataStore
+                        if (i == finalJson.length() - 1) {
+                            val endDate = convertMillisToDate(it.date)
+                            prefsManager.saveEndDate(endDate)
+                            Log.d(TAG, "saveRetrievedDataToRoomDb: i: $i, date: $endDate")
+                        }
+                    }
+
+                    useCases.insertNotificationUseCase(
+                        notificationItem
+                    )
+                }
+
+                prefsManager.saveJson(newJson)
             }
         }
     }
